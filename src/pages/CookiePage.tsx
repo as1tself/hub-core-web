@@ -15,7 +15,7 @@ function CookiePage() {
             // 요청
             try {
 
-                const res = await fetch(`${BACKEND_API_BASE_URL}/jwt/exchange`, {
+                const res = await fetch(`${BACKEND_API_BASE_URL}/auth/exchange`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",

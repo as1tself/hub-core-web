@@ -1,13 +1,13 @@
 // src/util/fetchUtil.ts
 export async function refreshAccessToken(): Promise<string> {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) throw new Error("RefreshToken이 없습니다.");
+    // const refreshToken = localStorage.getItem("refreshToken");
+    // if (!refreshToken) throw new Error("RefreshToken이 없습니다.");
 
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_BASE_URL}/jwt/refresh`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_BASE_URL}/auth/refresh`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken }),
-        // credentials: "include", // 서버가 쿠키도 보길 원하면 주석 해제
+        //body: JSON.stringify({ refreshToken }),
+        credentials: "include", // 서버가 쿠키도 보길 원하면 주석 해제
     });
 
     if (!response.ok) throw new Error("AccessToken 갱신 실패");
@@ -33,6 +33,7 @@ export async function fetchWithAccess(
 
     if (response.status === 401) {
         try {
+            alert("401감지")
             const newAccess = await refreshAccessToken();
             headers.set("Authorization", `Bearer ${newAccess}`);
             response = await fetch(url, { ...options, headers });

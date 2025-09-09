@@ -4,22 +4,19 @@ import { useState } from "react";
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
 function LoginPage() {
-    // 자체 로그인시 username/password 변수
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
 
-    // 자체 로그인 이벤트
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
 
-        if (username === "" || password === "") {
+        if (!username || !password) {
             setError("아이디와 비밀번호를 입력하세요.");
             return;
         }
 
-        // API 요청
         try {
             const res = await fetch(`${BACKEND_API_BASE_URL}/login`, {
                 method: "POST",
@@ -30,21 +27,24 @@ function LoginPage() {
 
             if (!res.ok) throw new Error("로그인 실패");
 
-            const data: { accessToken: string; refreshToken: string } = await res.json();
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("refreshToken", data.refreshToken);
+            // 서버는 { accessToken }만 JSON으로 반환 (refreshToken은 HttpOnly 쿠키로 옴)
+            const data: { accessToken: string } = await res.json();
+
+            // 원하는 저장 위치에 accessToken만 저장 (예: 메모리/컨텍스트가 더 안전)
+            localStorage.setItem("accessToken", data.accessToken); // 필요시 메모리/Context로 대체
+
+            // 다음 페이지로 이동
+            location.replace("/user");
         } catch (err) {
             console.error(err);
             setError("아이디 또는 비밀번호가 틀렸습니다.");
         }
     };
 
-    // 소셜 로그인 이벤트
-    const handleSocialLogin = (provider : string) => {
-        window.location.href = `${BACKEND_API_BASE_URL}/oauth2/authorization/${provider}`
+    const handleSocialLogin = (provider: string) => {
+        window.location.href = `${BACKEND_API_BASE_URL}/oauth2/authorization/${provider}`;
     };
 
-    // 페이지
     return (
         <div>
             <h1>로그인</h1>
@@ -73,12 +73,11 @@ function LoginPage() {
                 <button type="submit">계속</button>
             </form>
 
-            // 소셜 로그인 버튼
+            {/* 소셜 로그인 버튼 */}
             <div>
                 <button onClick={() => handleSocialLogin("google")}>Google로 계속하기</button>
                 <button onClick={() => handleSocialLogin("naver")}>Naver로 계속하기</button>
             </div>
-
         </div>
     );
 }

@@ -30,6 +30,7 @@ function UserPage() {
                 const data: User = await res.json();
                 setUserInfo(data);
             } catch (err) {
+                alert("유저 정보를 불러오지 못했습니다.")
                 console.error(err);
                 setError("유저 정보를 불러오지 못했습니다.");
             }
