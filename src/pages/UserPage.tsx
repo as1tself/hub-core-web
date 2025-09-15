@@ -1,53 +1,34 @@
-import { useEffect, useState } from "react";
-import { fetchWithAccess } from "../util/fetchUtil";
-
-// .env로 부터 백엔드 URL 받아오기
-const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
-
-type User = {
-    username: string;
-    nickname: string;
-    email: string;
-};
+// src/pages/UserPage.tsx
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../store/store";
+import { useEffect } from "react";
+import { useGetUserQuery } from "../store/userApi";
+import { setUser } from "../store/userSlice";
 
 function UserPage() {
-    // 정보
-    const [userInfo, setUserInfo] = useState<User | null>(null);
-    const [error, setError] = useState<string>("");
+    const dispatch = useDispatch();
+    const storedUser = useSelector((state: RootState) => state.user.user);
 
-    // 페이지 방문시 유저 정보 요청
+    // ✅ username 넘길 필요 없음
+    const { data: user, error, isLoading } = useGetUserQuery();
+
     useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const res = await fetchWithAccess(`${BACKEND_API_BASE_URL}/user`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                });
+        if (user) {
+            dispatch(setUser(user));
+        }
+    }, [user, dispatch]);
 
-                if (!res.ok) throw new Error("유저 정보 불러오기 실패");
-
-                const data: User = await res.json();
-                setUserInfo(data);
-            } catch (err) {
-                alert("유저 정보를 불러오지 못했습니다.")
-                console.error(err);
-                setError("유저 정보를 불러오지 못했습니다.");
-            }
-        };
-
-        fetchUserInfo();
-    }, []);
-
-    if (error) return <p>{error}</p>;
-    if (!userInfo) return <p>불러오는 중...</p>;
+    if (isLoading) return <p>불러오는 중...</p>;
+    if (error) return <p>유저 정보를 불러오지 못했습니다.</p>;
+    if (!storedUser) return <p>데이터 없음</p>;
 
     return (
         <div>
             <h1>내 정보</h1>
-            <p>아이디: {userInfo.username}</p>
-            <p>닉네임: {userInfo.nickname}</p>
-            <p>이메일: {userInfo.email}</p>
+            <p>아이디: {storedUser.username}</p>
+            <p>닉네임: {storedUser.nickname}</p>
+            <p>이메일: {storedUser.email}</p>
+            <p>소셜 로그인: {storedUser.social ? "예" : "아니오"}</p>
         </div>
     );
 }

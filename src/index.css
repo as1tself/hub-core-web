@@ -1,68 +1,213 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html, body, #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Roboto", "Arial", sans-serif;
+    box-sizing: border-box;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+* {
+    color: black;
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    outline: none;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* 상단 네비게이션 */
+.navbar {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 좌측 로고/버튼, 우측 프로필 공간 분리 */
+    padding: 0 20px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    /*border-bottom: 1px solid #ddd;*/
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* 네비게이션 왼쪽 (로고, 메뉴버튼) */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* 네비게이션 오른쪽 (아이콘, 프로필) */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* 프로필 아바타 */
+.navbar-profile {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;      /* 동그랗게 */
+    object-fit: cover;       /* 비율 유지하며 잘림 */
+    cursor: pointer;
+}
+
+/* 왼쪽 사이드바 */
+.sidebar {
+    display: flex;
+    position: fixed;
+    top: 56px; /* Navbar 높이만큼 아래 */
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    overflow-y: auto; /* 메뉴 길어지면 스크롤 */
+    transition: transform 0.3s ease;
+    z-index: 900;
+    /*border-right: 1px solid #ddd;*/
+}
+
+.sidebar.closed {
+    transform: translateX(-240px); /* 닫힐 때 왼쪽으로 숨기기 */
+}
+
+.sidebar-content {
+    width: 100%;
+    padding: 16px;
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+    margin-top: 56px;   /* Navbar 높이 보정 */
+    margin-left: 240px; /* Sidebar 보정 */
+    padding: 16px;
+    height: calc(100vh - 56px); /* Navbar 제외한 높이 */
+    overflow-y: auto;   /* 스크롤은 메인에서만 */
+}
+
+.menu-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 메뉴 */
+.menu-item {
+    display: flex;
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    text-align: left;
+    width: 100%;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    color: #000;
+    display: block;
+}
+
+.menu-button.active {
+    background-color: #e5e5e5; /* 선택된 메뉴 강조 */
+    font-weight: bold;
+}
+
+.arrow {
+    margin-right: 6px;
+}
+
+.menu-children {
+    margin-left: 16px;
+}
+
+
+/* 프로필 아바타 */
+.navbar-profile {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* 드롭다운 메뉴 */
+.profile-menu {
+    position: absolute;
+    top: 56px;          /* navbar 높이만큼 아래 */
+    right: 16px;
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    padding: 8px 0;
+    z-index: 1100;
+}
+
+/* 상단 프로필 영역 */
+.profile-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+}
+
+.profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.profile-name {
+    font-weight: bold;
+}
+
+.profile-email {
+    color: #666;
+    font-size: 13px;
+}
+
+.profile-link {
+    color: #065fd4;
+    font-size: 13px;
+    text-decoration: none;
+    margin-top: 2px;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
+}
+
+/* 구분선 */
+.profile-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 8px 0;
+}
+
+/* 메뉴 항목 */
+.profile-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.profile-item:hover {
+    background-color: #f5f5f5;
 }

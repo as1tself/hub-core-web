@@ -1,50 +1,66 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/userSlice";
+import type {User, ApiResponse} from "../store/userApi";
 
-// .env로 부터 백엔드 URL 받아오기
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
 function CookiePage() {
-
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    // 페이지 접근시 (백엔드에서 리디렉션으로 여기로 보내면, 실행)
     useEffect(() => {
-
-        const cookieToBody = async () => {
-            // 요청
+        const handleSocialLogin = async () => {
             try {
-
+                // 1) 소셜 쿠키 교환 → accessToken 발급
                 const res = await fetch(`${BACKEND_API_BASE_URL}/auth/exchange`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
                 });
 
-                // if (!res.ok) throw new Error("인증 실패");
-                if (!res.ok) navigate("/user")
+                if (!res.ok) {
+                    navigate("/login");
+                    return;
+                }
 
                 const data = await res.json();
-                localStorage.setItem("accessToken", data.accessToken);
-                localStorage.setItem("refreshToken", data.refreshToken);
+                const accessToken = data?.result?.accessToken;
 
-                navigate("/");
+                if (!accessToken) throw new Error("AccessToken 없음");
 
+                // accessToken 저장
+                localStorage.setItem("accessToken", accessToken);
+
+                // 2) 유저 정보 조회 → Redux 저장
+                const userRes = await fetch(`${BACKEND_API_BASE_URL}/user`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    credentials: "include",
+                });
+
+                if (userRes.ok) {
+                    const userData: ApiResponse<User> = await userRes.json();
+                    dispatch(setUser(userData.result));
+                    navigate("/");
+                } else {
+                    console.error("유저 정보 조회 실패");
+                    navigate("/login");
+                }
             } catch (err) {
-                console.log(err);
-                // alert("소셜 로그인 실패");
+                console.error("소셜 로그인 처리 실패:", err);
                 navigate("/login");
             }
-
         };
 
-        cookieToBody();
+        handleSocialLogin();
+    }, [dispatch, navigate]);
 
-    }, [navigate]);
-
-    return (
-        <p>로그인 처리 중입니다...</p>
-    );
+    return <p>로그인 처리 중입니다...</p>;
 }
 
 export default CookiePage;
