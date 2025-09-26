@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store/store";
 import { clearUser } from "../../store/userSlice";
 import { userApi } from "../../store/userApi";
+import { MdNotificationsNone } from "react-icons/md"; // ✅ 알림 아이콘
 
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
@@ -35,7 +36,7 @@ const Navbar: React.FC = () => {
 
             localStorage.removeItem("accessToken");
             dispatch(clearUser());
-            dispatch(userApi.util.resetApiState()); // RTK Query 캐시 초기화 (혹시 남아있을 경우)
+            dispatch(userApi.util.resetApiState()); // RTK Query 캐시 초기화
 
             window.location.replace("/login");
         } catch (err) {
@@ -43,18 +44,39 @@ const Navbar: React.FC = () => {
         }
     };
 
+    // 공지 존재 여부 (지금은 항상 true로 빨간점 표시)
+    const hasNotice = true;
+
     return (
         <nav className="navbar">
             <div className="navbar-left">
-                <h1 style={{ fontWeight: "bold" }}>My App</h1>
+                <a href="/" className="navbar-logo">
+                    My App
+                </a>
             </div>
+
             <div className="navbar-right" ref={menuRef}>
+                {/* ✅ 프로필 왼쪽에 알림 벨 추가 */}
+                <button
+                    type="button"
+                    className="navbar-bell"
+                    aria-label="알림"
+                    onClick={() => {
+                        // TODO: 알림 패널 열기 로직 (필요 시)
+                        console.log("알림 클릭");
+                    }}
+                >
+                    <MdNotificationsNone size={32} />
+                    {hasNotice && <span className="bell-badge" />}
+                </button>
+
                 <img
                     src="/profile.jpg"
                     alt="profile"
                     className="navbar-profile"
                     onClick={() => setMenuOpen(!menuOpen)}
                 />
+
                 {menuOpen && (
                     <div className="profile-menu">
                         <div className="profile-header">
@@ -63,9 +85,7 @@ const Navbar: React.FC = () => {
                                 <div className="profile-name">
                                     {userInfo ? userInfo.username : "로그인 필요"}
                                 </div>
-                                <div className="profile-email">
-                                    {userInfo?.email ?? ""}
-                                </div>
+                                <div className="profile-email">{userInfo?.email ?? ""}</div>
                                 <a href="/user" className="profile-link">
                                     내 정보 보기
                                 </a>
@@ -73,8 +93,10 @@ const Navbar: React.FC = () => {
                         </div>
 
                         <div className="profile-divider"></div>
-                        <div className="profile-item">첫번째 메뉴</div>
-                        <div className="profile-item">API 내역</div>
+                        <div className="profile-item" style={{color:"lightgray"}}>OPEN API 발급</div>
+                        <div className="profile-item" onClick={() => (window.location.href = "/api/history")}>
+                            API 성공/오류 내역
+                        </div>
 
                         {userInfo ? (
                             <div className="profile-item" onClick={handleLogout}>
@@ -85,12 +107,12 @@ const Navbar: React.FC = () => {
                                 className="profile-item"
                                 onClick={() => (window.location.href = "/login")}
                             >
-                                로그인
+                                로그인/회원가입
                             </div>
                         )}
 
                         <div className="profile-divider"></div>
-                        <div className="profile-item">설정</div>
+                        <div className="profile-item" style={{color:"lightgray"}}>설정</div>
                     </div>
                 )}
             </div>

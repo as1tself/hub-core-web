@@ -1,9 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { userApi } from "./userApi";
+import { apiHistoryApi } from "./apiHistoryApi"; // 새로 추가
 import userReducer from "./userSlice";
 import storage from "redux-persist/lib/storage"; // 기본은 localStorage
 import { persistReducer, persistStore } from "redux-persist";
-import { combineReducers } from "redux";
 
 const persistConfig = {
     key: "root",
@@ -13,6 +13,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
+    [apiHistoryApi.reducerPath]: apiHistoryApi.reducer, // 추가
     user: userReducer,
 });
 
@@ -21,7 +22,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({ serializableCheck: false }).concat(userApi.middleware),
+        getDefaultMiddleware({ serializableCheck: false })
+            .concat(userApi.middleware)
+            .concat(apiHistoryApi.middleware), // 추가
 });
 
 export const persistor = persistStore(store);

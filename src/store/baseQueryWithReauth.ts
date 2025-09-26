@@ -3,7 +3,7 @@ import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
-// ✅ 일반 요청용: Authorization 헤더 자동 첨부
+// 일반 요청용: Authorization 헤더 자동 첨부
 const baseQueryAuth = fetchBaseQuery({
     baseUrl: BACKEND_API_BASE_URL,
     credentials: "include",
@@ -15,7 +15,7 @@ const baseQueryAuth = fetchBaseQuery({
     },
 });
 
-// ✅ refresh 전용: Authorization 헤더 제거
+// refresh 전용: Authorization 헤더 제거
 const baseQueryNoAuth = fetchBaseQuery({
     baseUrl: BACKEND_API_BASE_URL,
     credentials: "include",
@@ -30,7 +30,7 @@ export const baseQuery = baseQueryAuth;
 
 // wrapper
 export const baseQueryWithReauth: typeof baseQueryAuth = async (args, api, extraOptions) => {
-    // ✅ 일반 요청은 항상 baseQueryAuth 사용
+    // 일반 요청은 항상 baseQueryAuth 사용
     let result = await baseQueryAuth(args, api, extraOptions);
 
     // refresh 자체 요청에는 재시도/재발급 로직 적용하지 않음 (무한루프 방지)
@@ -54,7 +54,7 @@ export const baseQueryWithReauth: typeof baseQueryAuth = async (args, api, extra
             }
         } catch { /* no-op */ }
 
-        // ✅ 401이면 무조건 refresh 시도 + 만료 코드도 커버
+        // 401이면 무조건 refresh 시도 + 만료 코드도 커버
         const shouldRefresh = status === 401 || errorCode === "client.request.jwt.expired";
 
         if (shouldRefresh) {
@@ -69,7 +69,7 @@ export const baseQueryWithReauth: typeof baseQueryAuth = async (args, api, extra
                     extraOptions
                 );
 
-                // ✅ 성공 케이스만 통과
+                // 성공 케이스만 통과
                 if ("error" in refreshResult || !refreshResult.data) {
                     console.error("refresh 실패 → 홈으로 이동");
                     localStorage.removeItem("accessToken");
@@ -77,7 +77,7 @@ export const baseQueryWithReauth: typeof baseQueryAuth = async (args, api, extra
                     return refreshResult;
                 }
 
-                // ✅ refreshResult.data 가 존재 → accessToken 추출
+                // refreshResult.data 가 존재 → accessToken 추출
                 const { accessToken } = (refreshResult.data as any).result || {};
                 if (accessToken) {
                     localStorage.setItem("accessToken", accessToken);

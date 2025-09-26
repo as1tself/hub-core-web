@@ -6,6 +6,7 @@ import DashboardPage from "./pages/Dashboard.tsx";
 import JoinPage from "./pages/JoinPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import CookiePage from "./pages/CookiePage.tsx";
+import APIHistory from "./pages/APIHistory.tsx";
 
 const App: React.FC = () => {
     return (
@@ -18,6 +19,8 @@ const App: React.FC = () => {
                     <Route path="/join" element={<JoinPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/cookie" element={<CookiePage />} />
+                    <Route path="/api/history" element={<APIHistory />} />
+                    <Route path="*" element={<h1>404 Not Found</h1>} />
                 </Routes>
             </Layout>
         </Router>

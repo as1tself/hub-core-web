@@ -1,22 +1,11 @@
 // src/pages/UserPage.tsx
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import { useEffect } from "react";
 import { useGetUserQuery } from "../store/userApi";
-import { setUser } from "../store/userSlice";
 
 function UserPage() {
-    const dispatch = useDispatch();
-    const storedUser = useSelector((state: RootState) => state.user.user);
-
-    // ✅ username 넘길 필요 없음
-    const { data: user, error, isLoading } = useGetUserQuery();
-
-    useEffect(() => {
-        if (user) {
-            dispatch(setUser(user));
-        }
-    }, [user, dispatch]);
+    const { isLoading, error } = useGetUserQuery(); // 호출만 해주면 onQueryStarted가 알아서 set/clear
+    const storedUser = useSelector((s: RootState) => s.user.user);
 
     if (isLoading) return <p>불러오는 중...</p>;
     if (error) return <p>유저 정보를 불러오지 못했습니다.</p>;
