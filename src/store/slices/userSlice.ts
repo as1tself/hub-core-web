@@ -1,12 +1,6 @@
-// src/store/userSlice.ts
+// src/store/slices/userSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-type User = {
-    username: string;
-    nickname?: string;
-    email?: string;
-    social?: boolean;
-};
+import type { User } from "../../types";
 
 interface UserState {
     user: User | null;

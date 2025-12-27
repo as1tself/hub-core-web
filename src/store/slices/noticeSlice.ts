@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface NoticeState {
     hasNotice: boolean;
@@ -12,7 +12,7 @@ const noticeSlice = createSlice({
     name: "notice",
     initialState,
     reducers: {
-        setNotice: (state, action) => {
+        setNotice: (state, action: PayloadAction<boolean>) => {
             state.hasNotice = action.payload;
         },
         clearNotice: (state) => {

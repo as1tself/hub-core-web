@@ -1,0 +1,11 @@
+/* ===== Main Style Entry Point ===== */
+@import "./variables.css";
+@import "./global.css";
+@import "./animations.css";
+@import "./layout.css";
+@import "./components.css";
+
+/* Page-specific styles */
+@import "./pages/login.css";
+@import "./pages/api-history.css";
+@import "./pages/user.css";

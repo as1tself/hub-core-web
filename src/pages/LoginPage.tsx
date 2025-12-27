@@ -1,7 +1,7 @@
 // src/pages/LoginPage.tsx
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "../store/userSlice";
+import { setUser, useLazyGetUserQuery, useLoginMutation } from "../store";
 
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
@@ -11,136 +11,45 @@ function LoginPage() {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
 
+    const [triggerGetUser] = useLazyGetUserQuery();
+    const [login] = useLoginMutation();
+
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError("");
+        // setError("") 제거 - 깜빡임 방지 (새 에러 발생 시 덮어씀)
 
-        // (1) 기존 precheck 로직 그대로
+        // (1) precheck: 이미 로그인 되어 있는지 확인
+        // baseQueryWithReauth가 토큰 재발급을 자동으로 처리함
         try {
-            const accessToken = localStorage.getItem("accessToken");
-            const precheck = await fetch(`${BACKEND_API_BASE_URL}/user`, {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-                },
-            });
-
-            if (precheck.ok) {
-                const data = await precheck.json();
-                dispatch(setUser(data.result));
-                location.replace("/user");
-                return;
-            }
-
-            if (precheck.status === 401) {
-                const errJson: any = await precheck.json().catch(() => null);
-                if (errJson?.code === "client.request.jwt.expired") {
-                    const refreshRes = await fetch(`${BACKEND_API_BASE_URL}/auth/refresh`, {
-                        method: "POST",
-                        credentials: "include",
-                        headers: { "Content-Type": "application/json" },
-                    });
-
-                    if (refreshRes.ok) {
-                        const refreshData: any = await refreshRes.json();
-                        const newToken = refreshData?.result?.accessToken;
-                        if (newToken) localStorage.setItem("accessToken", newToken);
-
-                        const retry = await fetch(`${BACKEND_API_BASE_URL}/user`, {
-                            method: "GET",
-                            credentials: "include",
-                            headers: {
-                                "Content-Type": "application/json",
-                                ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
-                            },
-                        });
-
-                        if (retry.ok) {
-                            const userData = await retry.json();
-                            dispatch(setUser(userData.result));
-                            location.replace("/user");
-                            return;
-                        }
-                    } else {
-                        localStorage.removeItem("accessToken");
-                    }
-                }
-            }
+            await triggerGetUser().unwrap();
+            // 성공하면 이미 로그인됨 - setUser는 userApi의 onQueryStarted에서 자동 처리
+            location.replace("/user");
+            return;
         } catch {
-            // 무시 → 로그인 플로우 진행
+            // 실패하면 로그인 플로우 진행
         }
 
-        // (2) 기존 로그인 로직
+        // (2) 로그인 진행
         if (!username || !password) {
             setError("아이디와 비밀번호를 입력하세요.");
             return;
         }
 
         try {
-            const res = await fetch(`${BACKEND_API_BASE_URL}/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (!res.ok) throw new Error("로그인 실패");
-
-            const data: { accessToken: string } = await res.json();
-            localStorage.setItem("accessToken", data.accessToken);
+            // 로그인 API 호출 - accessToken 저장은 onQueryStarted에서 자동 처리
+            await login({ username, password }).unwrap();
 
             // 로그인 성공 후 /user 조회
             try {
-                let userRes = await fetch(`${BACKEND_API_BASE_URL}/user`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${data.accessToken}`,
-                    },
-                });
-
-                if (!userRes.ok && userRes.status === 401) {
-                    const body = await userRes.json().catch(() => null);
-                    if (body?.code === "client.request.jwt.expired") {
-                        const ref = await fetch(`${BACKEND_API_BASE_URL}/auth/refresh`, {
-                            method: "POST",
-                            credentials: "include",
-                            headers: { "Content-Type": "application/json" },
-                        });
-
-                        if (ref.ok) {
-                            const refData: any = await ref.json();
-                            const newToken = refData?.result?.accessToken;
-                            if (newToken) localStorage.setItem("accessToken", newToken);
-
-                            userRes = await fetch(`${BACKEND_API_BASE_URL}/user`, {
-                                method: "GET",
-                                credentials: "include",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
-                                },
-                            });
-                        }
-                    }
-                }
-
-                if (userRes.ok) {
-                    const userData = await userRes.json();
-                    dispatch(setUser(userData.result));
-                } else {
-                    dispatch(setUser({ username }));
-                }
+                await triggerGetUser().unwrap();
+                // setUser는 userApi의 onQueryStarted에서 자동 처리
             } catch {
-                dispatch(setUser({ username }));
+                // user 조회 실패 시 기본값으로 설정 (비정상 케이스)
+                dispatch(setUser({ username, nickname: "", email: "", social: false }));
             }
 
             location.replace("/user");
-        } catch (err) {
-            console.error(err);
+        } catch {
             setError("아이디 또는 비밀번호가 틀렸습니다.");
         }
     };
@@ -155,8 +64,9 @@ function LoginPage() {
                 <h1 className="login-title">로그인</h1>
                 <form onSubmit={handleLogin} className="login-form">
                     <div className="form-group">
-                        <label>아이디</label>
+                        <label htmlFor="login-username">아이디</label>
                         <input
+                            id="login-username"
                             type="text"
                             placeholder="아이디"
                             className="input"
@@ -167,8 +77,9 @@ function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label>비밀번호</label>
+                        <label htmlFor="login-password">비밀번호</label>
                         <input
+                            id="login-password"
                             type="password"
                             placeholder="비밀번호"
                             className="input"

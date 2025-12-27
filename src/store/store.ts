@@ -1,20 +1,24 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { userApi } from "./userApi";
-import { apiHistoryApi } from "./apiHistoryApi"; // 새로 추가
-import userReducer from "./userSlice";
+import { userApi } from "./apis/userApi";
+import { apiHistoryApi } from "./apis/apiHistoryApi";
+import userReducer from "./slices/userSlice";
+import noticeReducer from "./slices/noticeSlice";
+import authReducer from "./slices/authSlice";
 import storage from "redux-persist/lib/storage"; // 기본은 localStorage
 import { persistReducer, persistStore } from "redux-persist";
 
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["user"], // user state만 저장
+    whitelist: ["user"], // user만 저장 (auth는 메모리에만 유지)
 };
 
 const rootReducer = combineReducers({
     [userApi.reducerPath]: userApi.reducer,
-    [apiHistoryApi.reducerPath]: apiHistoryApi.reducer, // 추가
+    [apiHistoryApi.reducerPath]: apiHistoryApi.reducer,
     user: userReducer,
+    notice: noticeReducer,
+    auth: authReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

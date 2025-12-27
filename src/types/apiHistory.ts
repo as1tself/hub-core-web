@@ -9,7 +9,7 @@ export interface ApiHistoryItem {
     message: string;
     path: string;
     clientIp: string;
-    result: any | null;
+    result: unknown;
     username: string;
     roles: string;
     ipChain: string[];
