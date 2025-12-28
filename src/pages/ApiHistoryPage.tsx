@@ -128,7 +128,6 @@ const ApiHistoryPage: React.FC = () => {
                     <tr>
                         <th scope="col">Seq</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Username</th>
                         <th scope="col">Path</th>
                         <th scope="col">Client Ip</th>
                         <th scope="col">Timestamp</th>
@@ -136,7 +135,7 @@ const ApiHistoryPage: React.FC = () => {
                     </thead>
                     <tbody>
                     {isLoading ? (
-                        <TableSkeleton rows={10} columns={6} />
+                        <TableSkeleton rows={10} columns={5} />
                     ) : data?.content && data.content.length > 0 ? (
                         data.content.map((item) => (
                             <tr key={item.seq}>
@@ -144,7 +143,6 @@ const ApiHistoryPage: React.FC = () => {
                                 <td className={item.status === 200 ? "status-ok" : "status-error"}>
                                     {item.status}
                                 </td>
-                                <td>{item.username}</td>
                                 <td>{item.path}</td>
                                 <td>{item.clientIp}</td>
                                 <td>{new Date(item.timestamp).toLocaleString()}</td>
@@ -152,7 +150,7 @@ const ApiHistoryPage: React.FC = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={6} className="no-data">데이터가 없습니다.</td>
+                            <td colSpan={5} className="no-data">데이터가 없습니다.</td>
                         </tr>
                     )}
                     </tbody>
