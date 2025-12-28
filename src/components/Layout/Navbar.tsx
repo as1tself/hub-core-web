@@ -167,7 +167,7 @@ const Navbar: React.FC = () => {
                     >
                         <img
                             src="/profile.jpg"
-                            alt=""
+                            alt="사용자 프로필"
                             className="navbar-profile"
                         />
                     </button>
@@ -175,7 +175,7 @@ const Navbar: React.FC = () => {
                     {menuOpen && (
                         <div className="profile-menu" role="menu" aria-label="프로필 메뉴">
                             <div className="profile-header">
-                                <img src="/profile.jpg" alt="" className="profile-avatar" />
+                                <img src="/profile.jpg" alt="사용자 프로필" className="profile-avatar" />
                                 <div className="profile-info">
                                     <div className="profile-name">
                                         {userInfo ? userInfo.username : "로그인 필요"}

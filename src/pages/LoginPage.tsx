@@ -1,5 +1,5 @@
 // src/pages/LoginPage.tsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser, useLazyGetUserQuery, useLoginMutation } from "../store";
 
@@ -10,6 +10,10 @@ function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        document.title = '로그인 - My App';
+    }, []);
 
     const [triggerGetUser] = useLazyGetUserQuery();
     const [login] = useLoginMutation();
@@ -89,7 +93,7 @@ function LoginPage() {
                         />
                     </div>
 
-                    {error && <p className="login-error">{error}</p>}
+                    {error && <p className="login-error" role="alert">{error}</p>}
 
                     <button type="submit" className="btn btn--primary">계속</button>
                 </form>

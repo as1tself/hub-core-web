@@ -9,6 +9,10 @@ const sortOptions = [
 ];
 
 const ApiHistoryPage: React.FC = () => {
+    useEffect(() => {
+        document.title = 'API 내역 - My App';
+    }, []);
+
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState("timestamp,desc");
     const [search, setSearch] = useState("");

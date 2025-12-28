@@ -5,6 +5,10 @@ import { useCheckUsernameExistMutation, useRegisterUserMutation } from "../store
 function JoinPage() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = '회원가입 - My App';
+    }, []);
+
     // 회원가입 변수
     const [username, setUsername] = useState<string>("");
     const [isUsernameValid, setIsUsernameValid] = useState<boolean | null>(null); // null: 검사 전, true: 사용 가능, false: 중복
@@ -79,10 +83,10 @@ function JoinPage() {
                     minLength={4}
                 />
                 {username.length >= 4 && isUsernameValid === false && (
-                    <p>이미 사용 중인 아이디입니다.</p>
+                    <p role="alert">이미 사용 중인 아이디입니다.</p>
                 )}
                 {username.length >= 4 && isUsernameValid === true && (
-                    <p>사용 가능한 아이디입니다.</p>
+                    <p role="status">사용 가능한 아이디입니다.</p>
                 )}
 
                 <label htmlFor="join-password">비밀번호</label>
@@ -116,7 +120,7 @@ function JoinPage() {
                     required
                 />
 
-                {error && <p>{error}</p>}
+                {error && <p role="alert">{error}</p>}
 
                 <button type="submit" disabled={isUsernameValid !== true || isRegistering}>
                     {isRegistering ? "가입 중..." : "회원가입"}

@@ -1,10 +1,15 @@
 // src/pages/UserPage.tsx
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 import { useGetUserQuery } from "../store";
 import { Skeleton, Spinner } from "../components/Loading";
 
 function UserPage() {
+    useEffect(() => {
+        document.title = '내 정보 - My App';
+    }, []);
+
     const { isLoading, error } = useGetUserQuery();
     const storedUser = useSelector((s: RootState) => s.user.user);
 

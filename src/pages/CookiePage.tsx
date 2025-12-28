@@ -8,6 +8,10 @@ function CookiePage() {
     const [triggerGetUser] = useLazyGetUserQuery();
 
     useEffect(() => {
+        document.title = '로그인 처리 중 - My App';
+    }, []);
+
+    useEffect(() => {
         const handleSocialLogin = async () => {
             try {
                 // 1) 소셜 쿠키 교환 → accessToken 발급 (HTTP-only 쿠키로 백엔드에서 설정됨)
