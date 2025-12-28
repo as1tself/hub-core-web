@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import type { MenuItemData } from "./MenuTree";
 
 interface MenuItemProps {
-    item: { label: string; path?: string; children?: MenuItemProps["item"][] };
+    item: MenuItemData;
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
@@ -17,6 +18,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
             {item.children && item.children.length > 0 ? (
                 <>
                     <button className="menu-button" onClick={() => setOpen(!open)}>
+                        {item.icon && <item.icon className="menu-icon" size={18} strokeWidth={2} />}
                         <span className="arrow">{open ? "▼" : "▶"}</span>
                         {item.label}
                     </button>
@@ -33,6 +35,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item }) => {
                     to={item.path || "#"}
                     className={`menu-button ${isActive ? "active" : ""}`}
                 >
+                    {item.icon && <item.icon className="menu-icon" size={18} strokeWidth={2} />}
                     {item.label}
                 </Link>
             )}

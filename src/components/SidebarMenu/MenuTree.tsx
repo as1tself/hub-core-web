@@ -1,23 +1,18 @@
 import React from "react";
+import { Home, User, BarChart3, type LucideIcon } from "lucide-react";
 import MenuItem from "./MenuItem";
 
-const menuData = [
-    { label: "홈", path: "/" },
-    { label: "DESC", path: "/user" },
-    // {
-    //     label: "Settings",
-    //     children: [
-    //         { label: "Profile", path: "user" },
-    //         { label: "Account", path: "/settings/account" },
-    //     ],
-    // },
-    // {
-    //     label: "Reports",
-    //     children: [
-    //         { label: "Daily", path: "/reports/daily" },
-    //         { label: "Monthly", path: "/reports/monthly" },
-    //     ],
-    // },
+export interface MenuItemData {
+    label: string;
+    path?: string;
+    icon?: LucideIcon;
+    children?: MenuItemData[];
+}
+
+const menuData: MenuItemData[] = [
+    { label: "홈", path: "/", icon: Home },
+    { label: "내 정보", path: "/user", icon: User },
+    { label: "API 내역", path: "/api/history", icon: BarChart3 },
 ];
 
 const MenuTree: React.FC = () => {

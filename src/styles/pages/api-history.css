@@ -162,24 +162,19 @@
 
 .api-history-table th:nth-child(3),
 .api-history-table td:nth-child(3) {
-    width: 120px;  /* Username */
-}
-
-.api-history-table th:nth-child(4),
-.api-history-table td:nth-child(4) {
     width: auto;  /* Path - 나머지 공간 사용 */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.api-history-table th:nth-child(5),
-.api-history-table td:nth-child(5) {
+.api-history-table th:nth-child(4),
+.api-history-table td:nth-child(4) {
     width: 140px;  /* Client Ip */
 }
 
-.api-history-table th:nth-child(6),
-.api-history-table td:nth-child(6) {
+.api-history-table th:nth-child(5),
+.api-history-table td:nth-child(5) {
     width: 180px;  /* Timestamp */
 }
 
