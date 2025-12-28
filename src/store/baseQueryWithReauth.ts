@@ -7,6 +7,16 @@ import type { ApiResponse, LoginResponse } from "../types";
 
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
+// Authorization 헤더 없이 요청 (refresh용)
+const baseQueryNoAuth = fetchBaseQuery({
+    baseUrl: BACKEND_API_BASE_URL,
+    credentials: "include",
+    prepareHeaders: (headers) => {
+        headers.set("Content-Type", "application/json");
+        return headers;
+    },
+});
+
 // Authorization 헤더에 accessToken을 담아서 전송
 const baseQueryWithAuth = fetchBaseQuery({
     baseUrl: BACKEND_API_BASE_URL,
@@ -53,7 +63,7 @@ async function doRefresh(
     // 새 refresh 시작
     refreshPromise = (async () => {
         try {
-            const refreshResult = await baseQueryWithAuth(
+            const refreshResult = await baseQueryNoAuth(
                 { url: "/auth/refresh", method: "POST" },
                 api,
                 extraOptions

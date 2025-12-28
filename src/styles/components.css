@@ -125,7 +125,7 @@
     list-style: none;
     padding: 4px 0;
     margin: 0;
-    z-index: 100;
+    z-index: 50;
 }
 
 .custom-dropdown .dropdown-menu li {
@@ -238,7 +238,7 @@
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
+    z-index: 100;
 }
 
 .inline-spinner {

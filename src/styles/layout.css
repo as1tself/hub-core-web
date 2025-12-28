@@ -11,7 +11,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 1000;
+    z-index: 80;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     border-bottom-right-radius: 10px;
     background: rgba(255, 255, 255, 0.5);
@@ -84,12 +84,141 @@
 
 .bell-badge {
     position: absolute;
-    left: 10px;
-    top: 4px;
-    width: 8px;
-    height: 8px;
+    right: 2px;
+    top: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
     background: #ff3b30;
-    border-radius: 50%;
+    border-radius: 9px;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* 알림 드롭다운 */
+.notification-wrapper {
+    position: relative;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 320px;
+    max-height: 400px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    overflow: hidden;
+    animation: dropdownFadeIn 0.2s ease;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: #333;
+}
+
+.notification-clear {
+    background: none;
+    border: none;
+    color: #6366f1;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.notification-clear:hover {
+    background-color: rgba(99, 102, 241, 0.1);
+}
+
+.notification-list {
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.notification-empty {
+    padding: 40px 16px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f5f5f5;
+    transition: background-color 0.2s;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: #f9f9f9;
+}
+
+.notification-item.unread {
+    background-color: #f0f7ff;
+}
+
+.notification-item.unread:hover {
+    background-color: #e5f0ff;
+}
+
+.notification-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-message {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.notification-time {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
 }
 
 /* 왼쪽 사이드바 */
@@ -104,7 +233,7 @@
     width: 240px;
     overflow-y: auto;
     transition: transform 0.3s ease;
-    z-index: 900;
+    z-index: 60;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -232,7 +361,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     padding: 8px 0;
-    z-index: 1100;
+    z-index: 90;
 }
 
 .profile-header {
