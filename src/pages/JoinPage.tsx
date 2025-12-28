@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-// .env로 부터 백엔드 URL 받아오기
-const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
+import { useCheckUsernameExistMutation, useRegisterUserMutation } from "../store";
 
 function JoinPage() {
     const navigate = useNavigate();
@@ -15,9 +13,12 @@ function JoinPage() {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState<string>("");
 
-    // username 입력창 변경 이벤트
+    // RTK Query mutations
+    const [checkUsernameExist] = useCheckUsernameExistMutation();
+    const [registerUser, { isLoading: isRegistering }] = useRegisterUserMutation();
+
+    // username 입력창 변경 이벤트 (300ms 디바운스)
     useEffect(() => {
-        // username 중복 확인
         const checkUsername = async () => {
             if (username.length < 4) {
                 setIsUsernameValid(null);
@@ -25,14 +26,7 @@ function JoinPage() {
             }
 
             try {
-                const res = await fetch(`${BACKEND_API_BASE_URL}/user/exist`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                    body: JSON.stringify({ username }),
-                });
-
-                const exists: boolean = await res.json();
+                const exists = await checkUsernameExist({ username }).unwrap();
                 setIsUsernameValid(!exists);
             } catch {
                 setIsUsernameValid(null);
@@ -41,7 +35,7 @@ function JoinPage() {
 
         const delay = setTimeout(checkUsername, 300);
         return () => clearTimeout(delay);
-    }, [username]);
+    }, [username, checkUsernameExist]);
 
     // 회원 가입 이벤트
     const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,14 +55,7 @@ function JoinPage() {
         }
 
         try {
-            const res = await fetch(`${BACKEND_API_BASE_URL}/user`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ username, password, nickname, email }),
-            });
-
-            if (!res.ok) throw new Error("회원가입 실패");
+            await registerUser({ username, password, nickname, email }).unwrap();
             navigate("/login");
         } catch {
             setError("회원가입 중 오류가 발생했습니다.");
@@ -81,8 +68,9 @@ function JoinPage() {
             <h1>회원 가입</h1>
 
             <form onSubmit={handleSignUp}>
-                <label>아이디</label>
+                <label htmlFor="join-username">아이디</label>
                 <input
+                    id="join-username"
                     type="text"
                     placeholder="아이디 (4자 이상)"
                     value={username}
@@ -97,8 +85,9 @@ function JoinPage() {
                     <p>사용 가능한 아이디입니다.</p>
                 )}
 
-                <label>비밀번호</label>
+                <label htmlFor="join-password">비밀번호</label>
                 <input
+                    id="join-password"
                     type="password"
                     placeholder="비밀번호 (4자 이상)"
                     value={password}
@@ -107,8 +96,9 @@ function JoinPage() {
                     minLength={4}
                 />
 
-                <label>닉네임</label>
+                <label htmlFor="join-nickname">닉네임</label>
                 <input
+                    id="join-nickname"
                     type="text"
                     placeholder="닉네임"
                     value={nickname}
@@ -116,8 +106,9 @@ function JoinPage() {
                     required
                 />
 
-                <label>이메일</label>
+                <label htmlFor="join-email">이메일</label>
                 <input
+                    id="join-email"
                     type="email"
                     placeholder="이메일 주소"
                     value={email}
@@ -127,8 +118,8 @@ function JoinPage() {
 
                 {error && <p>{error}</p>}
 
-                <button type="submit" disabled={isUsernameValid !== true}>
-                    회원가입
+                <button type="submit" disabled={isUsernameValid !== true || isRegistering}>
+                    {isRegistering ? "가입 중..." : "회원가입"}
                 </button>
             </form>
         </div>

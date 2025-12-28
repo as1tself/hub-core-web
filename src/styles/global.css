@@ -1,0 +1,50 @@
+/* ===== Global Reset & Base Styles ===== */
+html, body, #root {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Roboto", "Arial", sans-serif;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+* {
+    color: black;
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    outline: none;
+}
+
+/* 구분선 */
+.profile-divider, .divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 8px 0;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 2px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+    justify-content: center;
+}
+
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* Utility Classes */
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }

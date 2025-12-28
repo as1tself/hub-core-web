@@ -1,84 +1,110 @@
+// src/pages/LoginPage.tsx
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setUser, useLazyGetUserQuery, useLoginMutation } from "../store";
 
-// .env로 부터 백엔드 URL 받아오기
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
 function LoginPage() {
-    // 자체 로그인시 username/password 변수
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<string>("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const dispatch = useDispatch();
 
-    // 자체 로그인 이벤트
+    const [triggerGetUser] = useLazyGetUserQuery();
+    const [login] = useLoginMutation();
+
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError("");
+        // setError("") 제거 - 깜빡임 방지 (새 에러 발생 시 덮어씀)
 
-        if (username === "" || password === "") {
+        // (1) precheck: 이미 로그인 되어 있는지 확인
+        // baseQueryWithReauth가 토큰 재발급을 자동으로 처리함
+        try {
+            await triggerGetUser().unwrap();
+            // 성공하면 이미 로그인됨 - setUser는 userApi의 onQueryStarted에서 자동 처리
+            location.replace("/user");
+            return;
+        } catch {
+            // 실패하면 로그인 플로우 진행
+        }
+
+        // (2) 로그인 진행
+        if (!username || !password) {
             setError("아이디와 비밀번호를 입력하세요.");
             return;
         }
 
-        // API 요청
         try {
-            const res = await fetch(`${BACKEND_API_BASE_URL}/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
-                body: JSON.stringify({ username, password }),
-            });
+            // 로그인 API 호출 - accessToken 저장은 onQueryStarted에서 자동 처리
+            await login({ username, password }).unwrap();
 
-            if (!res.ok) throw new Error("로그인 실패");
+            // 로그인 성공 후 /user 조회
+            try {
+                await triggerGetUser().unwrap();
+                // setUser는 userApi의 onQueryStarted에서 자동 처리
+            } catch {
+                // user 조회 실패 시 기본값으로 설정 (비정상 케이스)
+                dispatch(setUser({ username, nickname: "", email: "", social: false }));
+            }
 
-            const data: { accessToken: string; refreshToken: string } = await res.json();
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("refreshToken", data.refreshToken);
-        } catch (err) {
-            console.error(err);
+            location.replace("/user");
+        } catch {
             setError("아이디 또는 비밀번호가 틀렸습니다.");
         }
     };
 
-    // 소셜 로그인 이벤트
-    const handleSocialLogin = (provider : string) => {
-        window.location.href = `${BACKEND_API_BASE_URL}/oauth2/authorization/${provider}`
+    const handleSocialLogin = (provider: string) => {
+        window.location.href = `${BACKEND_API_BASE_URL}/oauth2/authorization/${provider}`;
     };
 
-    // 페이지
     return (
-        <div>
-            <h1>로그인</h1>
+        <div className="login-page">
+            <div className="login-card">
+                <h1 className="login-title">로그인</h1>
+                <form onSubmit={handleLogin} className="login-form">
+                    <div className="form-group">
+                        <label htmlFor="login-username">아이디</label>
+                        <input
+                            id="login-username"
+                            type="text"
+                            placeholder="아이디"
+                            className="input"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
 
-            <form onSubmit={handleLogin}>
-                <label>아이디</label>
-                <input
-                    type="text"
-                    placeholder="아이디"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
+                    <div className="form-group">
+                        <label htmlFor="login-password">비밀번호</label>
+                        <input
+                            id="login-password"
+                            type="password"
+                            placeholder="비밀번호"
+                            className="input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                <label>비밀번호</label>
-                <input
-                    type="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+                    {error && <p className="login-error">{error}</p>}
 
-                {error && <p>{error}</p>}
+                    <button type="submit" className="btn btn--primary">계속</button>
+                </form>
 
-                <button type="submit">계속</button>
-            </form>
+                <div className="divider">또는</div>
 
-            // 소셜 로그인 버튼
-            <div>
-                <button onClick={() => handleSocialLogin("google")}>Google로 계속하기</button>
-                <button onClick={() => handleSocialLogin("naver")}>Naver로 계속하기</button>
+                <div className="social-row">
+                    <button onClick={() => handleSocialLogin("google")} className="social-btn">
+                        Google로 계속하기
+                    </button>
+                    <button onClick={() => handleSocialLogin("naver")} className="social-btn">
+                        Naver로 계속하기
+                    </button>
+                </div>
             </div>
-
         </div>
     );
 }

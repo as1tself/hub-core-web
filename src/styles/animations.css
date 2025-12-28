@@ -1,0 +1,35 @@
+/* ===== Animations ===== */
+
+/* Fade In with Opacity Only */
+@keyframes fadeInOpacity {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Fade In with Transform */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Skeleton Shimmer */
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Spinner Rotate */
+@keyframes spinner-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

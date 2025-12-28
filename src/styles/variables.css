@@ -1,0 +1,66 @@
+/* ===== Design System Variables ===== */
+:root {
+    /* Primary Colors */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1e40af;
+    --color-primary-light: #93c5fd;
+    --color-primary-bg: #eff6ff;
+
+    /* Status Colors */
+    --color-success: #16a34a;
+    --color-error: #dc2626;
+    --color-warning: #f59e0b;
+
+    /* Text Colors */
+    --color-text: #111827;
+    --color-text-secondary: #374151;
+    --color-text-muted: #6b7280;
+    --color-text-placeholder: #9ca3af;
+
+    /* Background Colors */
+    --color-bg: #f8fafc;
+    --color-bg-secondary: #f3f4f6;
+    --color-bg-tertiary: #f9fafb;
+    --color-bg-white: #ffffff;
+
+    /* Border Colors */
+    --color-border: #e5e7eb;
+    --color-border-hover: #d1d5db;
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-full: 9999px;
+
+    /* Font Sizes */
+    --font-xs: 12px;
+    --font-sm: 13px;
+    --font-base: 14px;
+    --font-md: 16px;
+    --font-lg: 18px;
+    --font-xl: 24px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 2px 12px rgba(0, 0, 0, 0.15);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.2s ease;
+
+    /* Legacy aliases */
+    --primary: #2563eb;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f8fafc;
+}

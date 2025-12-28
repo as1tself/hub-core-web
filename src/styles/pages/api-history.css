@@ -1,0 +1,195 @@
+/* ===== API History Page ===== */
+.api-history-page {
+    max-width: 1200px;
+    min-width: 600px;
+    min-height: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: var(--color-bg-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.api-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.api-history-header h1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.api-history-header button {
+    padding: 6px 14px;
+    font-size: var(--font-base);
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.api-history-header button:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+}
+
+.api-history-header button:disabled {
+    background: var(--color-primary-light);
+    cursor: not-allowed;
+}
+
+.api-history-filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.api-history-filters .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.api-history-filters .filter-group-right {
+    margin-left: auto;
+}
+
+.api-history-filters label {
+    font-weight: 500;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+}
+
+.api-history-filters input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    width: 180px;
+    color: var(--color-text-secondary);
+}
+
+.api-history-filters input[type="text"]::placeholder {
+    color: var(--color-text-placeholder);
+}
+
+.api-history-filters input[type="text"]:hover {
+    border-color: var(--color-border-hover);
+}
+
+.api-history-filters input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.api-history-filters .filter-group button.search-btn {
+    padding: 6px 14px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.api-history-filters .filter-group button.search-btn:hover {
+    background: var(--color-primary-hover);
+}
+
+.api-history-table-container {
+    position: relative;
+    overflow-x: auto;
+    min-height: 540px;
+}
+
+.table-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 10;
+    min-height: 300px;
+}
+
+.api-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.api-history-table tbody tr:not(.skeleton-row) {
+    animation: fadeInOpacity 0.3s ease-out;
+}
+
+.api-history-table th,
+.api-history-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: var(--font-base);
+}
+
+.api-history-table th {
+    background: var(--color-bg-tertiary);
+    font-weight: 600;
+    color: #555;
+}
+
+/* 열 너비 고정 - 데이터 길이와 관계없이 일정한 레이아웃 유지 */
+.api-history-table th:nth-child(1),
+.api-history-table td:nth-child(1) {
+    width: 80px;  /* Seq */
+}
+
+.api-history-table th:nth-child(2),
+.api-history-table td:nth-child(2) {
+    width: 80px;  /* Status */
+}
+
+.api-history-table th:nth-child(3),
+.api-history-table td:nth-child(3) {
+    width: 120px;  /* Username */
+}
+
+.api-history-table th:nth-child(4),
+.api-history-table td:nth-child(4) {
+    width: auto;  /* Path - 나머지 공간 사용 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.api-history-table th:nth-child(5),
+.api-history-table td:nth-child(5) {
+    width: 140px;  /* Client Ip */
+}
+
+.api-history-table th:nth-child(6),
+.api-history-table td:nth-child(6) {
+    width: 180px;  /* Timestamp */
+}
+
+.api-history-table tr:hover {
+    background: var(--color-bg-secondary);
+}
+
+.api-history-table .no-data {
+    text-align: center;
+    padding: 40px;
+    color: var(--color-text-muted);
+    font-size: var(--font-base);
+}

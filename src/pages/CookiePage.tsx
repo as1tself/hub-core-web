@@ -1,50 +1,32 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-// .env로 부터 백엔드 URL 받아오기
-const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
+import { useExchangeTokenMutation, useLazyGetUserQuery } from "../store";
 
 function CookiePage() {
-
     const navigate = useNavigate();
+    const [exchangeToken] = useExchangeTokenMutation();
+    const [triggerGetUser] = useLazyGetUserQuery();
 
-    // 페이지 접근시 (백엔드에서 리디렉션으로 여기로 보내면, 실행)
     useEffect(() => {
-
-        const cookieToBody = async () => {
-            // 요청
+        const handleSocialLogin = async () => {
             try {
+                // 1) 소셜 쿠키 교환 → accessToken 발급 (HTTP-only 쿠키로 백엔드에서 설정됨)
+                await exchangeToken().unwrap();
 
-                const res = await fetch(`${BACKEND_API_BASE_URL}/jwt/exchange`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                });
-
-                // if (!res.ok) throw new Error("인증 실패");
-                if (!res.ok) navigate("/user")
-
-                const data = await res.json();
-                localStorage.setItem("accessToken", data.accessToken);
-                localStorage.setItem("refreshToken", data.refreshToken);
+                // 2) 유저 정보 조회 → Redux 저장 (onQueryStarted에서 setUser 호출됨)
+                await triggerGetUser().unwrap();
 
                 navigate("/");
-
             } catch (err) {
-                console.log(err);
-                // alert("소셜 로그인 실패");
+                console.error("소셜 로그인 처리 실패:", err);
                 navigate("/login");
             }
-
         };
 
-        cookieToBody();
+        handleSocialLogin();
+    }, [exchangeToken, triggerGetUser, navigate]);
 
-    }, [navigate]);
-
-    return (
-        <p>로그인 처리 중입니다...</p>
-    );
+    return <p>로그인 처리 중입니다...</p>;
 }
 
 export default CookiePage;

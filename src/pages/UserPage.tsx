@@ -1,52 +1,55 @@
-import { useEffect, useState } from "react";
-import { fetchWithAccess } from "../util/fetchUtil";
-
-// .env로 부터 백엔드 URL 받아오기
-const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
-
-type User = {
-    username: string;
-    nickname: string;
-    email: string;
-};
+// src/pages/UserPage.tsx
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
+import { useGetUserQuery } from "../store";
+import { Skeleton, Spinner } from "../components/Loading";
 
 function UserPage() {
-    // 정보
-    const [userInfo, setUserInfo] = useState<User | null>(null);
-    const [error, setError] = useState<string>("");
+    const { isLoading, error } = useGetUserQuery();
+    const storedUser = useSelector((s: RootState) => s.user.user);
 
-    // 페이지 방문시 유저 정보 요청
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const res = await fetchWithAccess(`${BACKEND_API_BASE_URL}/user`, {
-                    method: "GET",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                });
+    if (isLoading) {
+        return (
+            <div className="user-page">
+                <h1>내 정보</h1>
+                <div className="user-info-skeleton">
+                    <div className="info-row">
+                        <Skeleton width={60} height={16} />
+                        <Skeleton width={120} height={16} />
+                    </div>
+                    <div className="info-row">
+                        <Skeleton width={60} height={16} />
+                        <Skeleton width={100} height={16} />
+                    </div>
+                    <div className="info-row">
+                        <Skeleton width={60} height={16} />
+                        <Skeleton width={180} height={16} />
+                    </div>
+                    <div className="info-row">
+                        <Skeleton width={80} height={16} />
+                        <Skeleton width={40} height={16} />
+                    </div>
+                </div>
+                <div className="loading-container">
+                    <Spinner size="md" />
+                    <p>사용자 정보를 불러오는 중...</p>
+                </div>
+            </div>
+        );
+    }
 
-                if (!res.ok) throw new Error("유저 정보 불러오기 실패");
-
-                const data: User = await res.json();
-                setUserInfo(data);
-            } catch (err) {
-                console.error(err);
-                setError("유저 정보를 불러오지 못했습니다.");
-            }
-        };
-
-        fetchUserInfo();
-    }, []);
-
-    if (error) return <p>{error}</p>;
-    if (!userInfo) return <p>불러오는 중...</p>;
+    if (error) return <p>유저 정보를 불러오지 못했습니다.</p>;
+    if (!storedUser) return <p>데이터 없음</p>;
 
     return (
-        <div>
+        <div className="user-page">
             <h1>내 정보</h1>
-            <p>아이디: {userInfo.username}</p>
-            <p>닉네임: {userInfo.nickname}</p>
-            <p>이메일: {userInfo.email}</p>
+            <div className="user-info">
+                <p><span className="label">아이디:</span> {storedUser.username}</p>
+                <p><span className="label">닉네임:</span> {storedUser.nickname}</p>
+                <p><span className="label">이메일:</span> {storedUser.email}</p>
+                <p><span className="label">소셜 로그인:</span> {storedUser.social ? "예" : "아니오"}</p>
+            </div>
         </div>
     );
 }
