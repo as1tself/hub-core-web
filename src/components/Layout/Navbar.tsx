@@ -1,22 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import type { RootState } from "../../store";
+import { useAppSelector, useAppDispatch, useAuthNavigate } from "../../hooks";
 import { useLogoutMutation, markAllAsRead, clearHistory } from "../../store";
 import { Bell, BellRing, Info, CheckCircle, XCircle } from "lucide-react";
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [menuOpen, setMenuOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
 
-    const userInfo = useSelector((state: RootState) => state.user.user);
-    const notificationHistory = useSelector((state: RootState) => state.notice.history);
+    const userInfo = useAppSelector((state) => state.user.user);
+    const notificationHistory = useAppSelector((state) => state.notice.history);
     const unreadCount = notificationHistory.filter((n) => !n.read).length;
     const [logout] = useLogoutMutation();
+    const { navigateWithAuth, isChecking } = useAuthNavigate();
 
     // 메뉴 외부 클릭 시 닫기
     useEffect(() => {
@@ -43,6 +43,11 @@ const Navbar: React.FC = () => {
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, []);
+
+    // 보호된 페이지로 이동 (로그인 확인 후)
+    const handleProtectedNavigation = (path: string) => {
+        navigateWithAuth(path, { onSuccess: () => setMenuOpen(false) });
+    };
 
     // 로그아웃 처리
     const handleLogout = async () => {
@@ -181,9 +186,15 @@ const Navbar: React.FC = () => {
                                         {userInfo ? userInfo.username : "로그인 필요"}
                                     </div>
                                     <div className="profile-email">{userInfo?.email ?? ""}</div>
-                                    <a href="/user" className="profile-link">
+                                    <button
+                                        type="button"
+                                        className="profile-link"
+                                        onClick={() => handleProtectedNavigation("/user")}
+                                        disabled={isChecking}
+                                        style={{ opacity: isChecking ? 0.7 : 1 }}
+                                    >
                                         내 정보 보기
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
 
@@ -201,7 +212,9 @@ const Navbar: React.FC = () => {
                                 type="button"
                                 className="profile-item"
                                 role="menuitem"
-                                onClick={() => navigate("/api/history")}
+                                onClick={() => handleProtectedNavigation("/api/history")}
+                                disabled={isChecking}
+                                style={{ opacity: isChecking ? 0.7 : 1 }}
                             >
                                 API 성공/오류 내역
                             </button>
