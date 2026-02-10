@@ -133,7 +133,6 @@ const ApiHistoryPage: React.FC = () => {
                 <table className="api-history-table">
                     <thead>
                     <tr>
-                        <th scope="col">{t.apiHistory.seq}</th>
                         <th scope="col">{t.apiHistory.status}</th>
                         <th scope="col">{t.apiHistory.method}</th>
                         <th scope="col">{t.apiHistory.path}</th>
@@ -144,11 +143,10 @@ const ApiHistoryPage: React.FC = () => {
                     </thead>
                     <tbody>
                     {isLoading ? (
-                        <TableSkeleton rows={10} columns={7} />
+                        <TableSkeleton rows={10} columns={6} />
                     ) : data?.content && data.content.length > 0 ? (
                         data.content.map((item) => (
-                            <tr key={item.seq}>
-                                <td>{item.seq}</td>
+                            <tr key={item.requestId}>
                                 <td>
                                     <span className={item.status >= 200 && item.status < 300 ? "status-ok" : "status-error"}>
                                         {item.status}
@@ -167,7 +165,7 @@ const ApiHistoryPage: React.FC = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={7} className="no-data">{t.common.noData}</td>
+                            <td colSpan={6} className="no-data">{t.common.noData}</td>
                         </tr>
                     )}
                     </tbody>

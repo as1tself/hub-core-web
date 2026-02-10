@@ -44,10 +44,10 @@ export interface TranslationKeys {
         subtitle: string;
         totalRequests: string;
         successRate: string;
-        activeUsers: string;
+        avgResponseTime: string;
         perMonth: string;
         uptime: string;
-        currentlyOnline: string;
+        average: string;
         recentApiCalls: string;
         viewAll: string;
         status: string;

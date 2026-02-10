@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Activity, CheckCircle, Users, ArrowRight } from "lucide-react";
+import { Activity, CheckCircle, Clock, ArrowRight } from "lucide-react";
 import { StatCard } from "../components/StatCard";
 import { useGetApiHistoryQuery } from "../store";
 import { Skeleton } from "../components/Loading";
@@ -21,9 +21,13 @@ const DashboardPage = () => {
     });
 
     const totalRequests = recentCalls?.total || 0;
-    const successCount = recentCalls?.content?.filter((c) => c.status >= 200 && c.status < 300).length || 0;
-    const totalInPage = recentCalls?.content?.length || 1;
+    const contentList = recentCalls?.content || [];
+    const successCount = contentList.filter((c) => c.status >= 200 && c.status < 300).length;
+    const totalInPage = contentList.length || 1;
     const successRate = totalInPage > 0 ? Math.round((successCount / totalInPage) * 100) : 0;
+    const avgResponseTime = contentList.length > 0
+        ? Math.round(contentList.reduce((sum, c) => sum + c.elapsedMs, 0) / contentList.length)
+        : 0;
 
     const formatRelativeTime = (timestamp: string): string => {
         const now = new Date();
@@ -65,7 +69,6 @@ const DashboardPage = () => {
                     value={isLoading ? "-" : totalRequests.toLocaleString()}
                     subtitle={t.dashboard.perMonth}
                     icon={Activity}
-                    trend={{ value: 12.5, isPositive: true }}
                     color="primary"
                 />
                 <StatCard
@@ -73,15 +76,13 @@ const DashboardPage = () => {
                     value={isLoading ? "-" : `${successRate}%`}
                     subtitle={t.dashboard.uptime}
                     icon={CheckCircle}
-                    trend={{ value: 0.8, isPositive: true }}
                     color="success"
                 />
                 <StatCard
-                    title={t.dashboard.activeUsers}
-                    value="1,204"
-                    subtitle={t.dashboard.currentlyOnline}
-                    icon={Users}
-                    trend={{ value: 0, isPositive: null }}
+                    title={t.dashboard.avgResponseTime}
+                    value={isLoading ? "-" : `${avgResponseTime}ms`}
+                    subtitle={t.dashboard.average}
+                    icon={Clock}
                     color="warning"
                 />
             </section>
@@ -120,7 +121,7 @@ const DashboardPage = () => {
                                 ))
                             ) : recentCalls?.content?.length ? (
                                 recentCalls.content.map((item) => (
-                                    <tr key={item.seq}>
+                                    <tr key={item.requestId}>
                                         <td>
                                             <span className={`status-badge ${item.status >= 200 && item.status < 300 ? "success" : item.status >= 400 && item.status < 500 ? "warning" : "error"}`}>
                                                 {item.status} {getStatusText(item.status)}

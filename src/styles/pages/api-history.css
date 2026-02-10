@@ -167,7 +167,7 @@
     letter-spacing: 0.5px;
 }
 
-/* 열 너비 고정 */
+/* 열 너비 고정: 상태 / 메서드 / 경로 / 클라이언트IP / 소요시간 / 시간 */
 .api-history-table th:nth-child(1),
 .api-history-table td:nth-child(1) {
     width: 80px;
@@ -180,29 +180,24 @@
 
 .api-history-table th:nth-child(3),
 .api-history-table td:nth-child(3) {
-    width: 70px;
-}
-
-.api-history-table th:nth-child(4),
-.api-history-table td:nth-child(4) {
     width: auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+.api-history-table th:nth-child(4),
+.api-history-table td:nth-child(4) {
+    width: 140px;
+}
+
 .api-history-table th:nth-child(5),
 .api-history-table td:nth-child(5) {
-    width: 140px;
+    width: 90px;
 }
 
 .api-history-table th:nth-child(6),
 .api-history-table td:nth-child(6) {
-    width: 90px;
-}
-
-.api-history-table th:nth-child(7),
-.api-history-table td:nth-child(7) {
     width: 180px;
 }
 
