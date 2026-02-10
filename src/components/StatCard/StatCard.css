@@ -1,0 +1,106 @@
+.stat-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 20px 24px;
+    transition: var(--theme-transition), transform 0.2s ease, box-shadow 0.2s ease;
+    min-width: 200px;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.stat-card__icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-card--primary .stat-card__icon-wrapper {
+    background: var(--color-primary-bg);
+    color: var(--color-primary);
+}
+
+.stat-card--success .stat-card__icon-wrapper {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.stat-card--error .stat-card__icon-wrapper {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+.stat-card--warning .stat-card__icon-wrapper {
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.stat-card__trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stat-card__trend.positive {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.stat-card__trend.negative {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+}
+
+.stat-card__trend.neutral {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+}
+
+.stat-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-card__title {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.stat-card__value-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.stat-card__value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.stat-card__subtitle {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}

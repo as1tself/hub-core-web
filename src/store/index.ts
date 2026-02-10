@@ -27,7 +27,21 @@ export {
     removeNotification,
 } from "./slices/noticeSlice";
 export type { ToastType } from "./slices/noticeSlice";
-export { setAccessToken, clearAccessToken } from "./slices/authSlice";
+export { setEncryptedAccessToken, clearAccessToken } from "./slices/authSlice";
+export {
+    setTheme,
+    toggleTheme,
+    syncWithSystem,
+    initializeTheme,
+} from "./slices/themeSlice";
+export type { ThemeMode } from "./slices/themeSlice";
+export {
+    setLocale,
+    toggleLocale,
+    syncWithSystem as syncLocaleWithSystem,
+    initializeLocale,
+} from "./slices/localeSlice";
+export type { LocaleMode, ResolvedLocale } from "./slices/localeSlice";
 
 // Types (re-export from types for convenience)
 export type { User, ApiResponse, LoginRequest, LoginResponse } from "../types";

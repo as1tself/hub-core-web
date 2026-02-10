@@ -1,12 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch, useAuthNavigate } from "../../hooks";
+import { useAppSelector, useAppDispatch, useAuthNavigate, useLocale } from "../../hooks";
 import { useLogoutMutation, markAllAsRead, clearHistory } from "../../store";
 import { Bell, BellRing, Info, CheckCircle, XCircle } from "lucide-react";
+import { ThemeToggle } from "../ThemeToggle";
+import { LocaleToggle } from "../LocaleToggle";
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { t } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -75,10 +78,10 @@ const Navbar: React.FC = () => {
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
 
-        if (minutes < 1) return "방금 전";
-        if (minutes < 60) return `${minutes}분 전`;
-        if (hours < 24) return `${hours}시간 전`;
-        return `${days}일 전`;
+        if (minutes < 1) return t.time.justNow;
+        if (minutes < 60) return t.time.minutesAgo(minutes);
+        if (hours < 24) return t.time.hoursAgo(hours);
+        return t.time.daysAgo(days);
     };
 
     const notificationIcons = {
@@ -96,6 +99,12 @@ const Navbar: React.FC = () => {
             </div>
 
             <div className="navbar-right">
+                {/* 테마 토글 */}
+                <ThemeToggle />
+
+                {/* 언어 토글 */}
+                <LocaleToggle />
+
                 {/* 알림 버튼 */}
                 <div className="notification-wrapper" ref={notificationRef}>
                     <button
@@ -120,20 +129,20 @@ const Navbar: React.FC = () => {
                     {notificationOpen && (
                         <div className="notification-dropdown">
                             <div className="notification-header">
-                                <span className="notification-title">알림</span>
+                                <span className="notification-title">{t.nav.notifications}</span>
                                 {notificationHistory.length > 0 && (
                                     <button
                                         className="notification-clear"
                                         onClick={() => dispatch(clearHistory())}
                                     >
-                                        모두 삭제
+                                        {t.nav.clearAll}
                                     </button>
                                 )}
                             </div>
                             <div className="notification-list">
                                 {notificationHistory.length === 0 ? (
                                     <div className="notification-empty">
-                                        알림이 없습니다
+                                        {t.nav.noNotifications}
                                     </div>
                                 ) : (
                                     notificationHistory.map((notification) => (
@@ -183,7 +192,7 @@ const Navbar: React.FC = () => {
                                 <img src="/profile.jpg" alt="사용자 프로필" className="profile-avatar" />
                                 <div className="profile-info">
                                     <div className="profile-name">
-                                        {userInfo ? userInfo.username : "로그인 필요"}
+                                        {userInfo ? userInfo.username : t.nav.loginRequired}
                                     </div>
                                     <div className="profile-email">{userInfo?.email ?? ""}</div>
                                     <button
@@ -193,7 +202,7 @@ const Navbar: React.FC = () => {
                                         disabled={isChecking}
                                         style={{ opacity: isChecking ? 0.7 : 1 }}
                                     >
-                                        내 정보 보기
+                                        {t.nav.viewProfile}
                                     </button>
                                 </div>
                             </div>
@@ -206,7 +215,7 @@ const Navbar: React.FC = () => {
                                 disabled
                                 style={{ color: "lightgray" }}
                             >
-                                OPEN API 발급
+                                {t.nav.openApiIssue}
                             </button>
                             <button
                                 type="button"
@@ -216,7 +225,7 @@ const Navbar: React.FC = () => {
                                 disabled={isChecking}
                                 style={{ opacity: isChecking ? 0.7 : 1 }}
                             >
-                                API 성공/오류 내역
+                                {t.nav.apiHistory}
                             </button>
 
                             {userInfo ? (
@@ -226,7 +235,7 @@ const Navbar: React.FC = () => {
                                     role="menuitem"
                                     onClick={handleLogout}
                                 >
-                                    로그아웃
+                                    {t.common.logout}
                                 </button>
                             ) : (
                                 <button
@@ -235,7 +244,7 @@ const Navbar: React.FC = () => {
                                     role="menuitem"
                                     onClick={() => navigate("/login")}
                                 >
-                                    로그인/회원가입
+                                    {t.common.login}/{t.common.register}
                                 </button>
                             )}
 
@@ -247,7 +256,7 @@ const Navbar: React.FC = () => {
                                 disabled
                                 style={{ color: "lightgray" }}
                             >
-                                설정
+                                {t.common.settings}
                             </button>
                         </div>
                     )}

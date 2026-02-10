@@ -1,11 +1,28 @@
 /* ===== Main Style Entry Point ===== */
+
+/* 1. Reset - 브라우저 기본 스타일 초기화 */
+@import "./reset.css";
+
+/* 2. Variables - CSS 변수 정의 */
 @import "./variables.css";
-@import "./global.css";
+
+/* 3. General - 기본 색상/폰트 설정 */
+@import "./general.css";
+
+/* 4. Animations - 애니메이션 키프레임 */
 @import "./animations.css";
+
+/* 5. Global - 유틸리티 클래스 */
+@import "./global.css";
+
+/* 6. Layout - 레이아웃 스타일 */
 @import "./layout.css";
+
+/* 7. Components - 공통 컴포넌트 */
 @import "./components.css";
 
-/* Page-specific styles */
+/* 8. Page-specific styles */
 @import "./pages/login.css";
 @import "./pages/api-history.css";
 @import "./pages/user.css";
+@import "./pages/dashboard.css";

@@ -1,0 +1,73 @@
+/* src/components/LocaleToggle/LocaleToggle.css */
+.locale-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: var(--radius-lg);
+    transition: background-color var(--transition-fast);
+}
+
+.locale-toggle:hover {
+    background: var(--color-bg-secondary);
+}
+
+.locale-toggle__track {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    background: var(--color-bg-tertiary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+    transition: background-color var(--transition-normal);
+}
+
+.locale-toggle__label {
+    position: relative;
+    z-index: 1;
+    font-size: 11px;
+    font-weight: 600;
+    transition: opacity var(--transition-normal), color var(--transition-normal);
+    opacity: 0.4;
+    color: var(--color-text-muted);
+}
+
+.locale-toggle__label.active {
+    opacity: 1;
+    color: var(--color-primary);
+}
+
+.locale-toggle__label--ko {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.locale-toggle__label--en {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 10px;
+}
+
+.locale-toggle__thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background: var(--color-bg-card);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
+    transition: left var(--transition-normal), background-color var(--transition-normal);
+}
+
+.locale-toggle__thumb.ko {
+    left: 2px;
+}
+
+.locale-toggle__thumb.en {
+    left: 26px;
+}

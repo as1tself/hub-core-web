@@ -4,6 +4,8 @@ import { apiHistoryApi } from "./apis/apiHistoryApi";
 import userReducer from "./slices/userSlice";
 import noticeReducer from "./slices/noticeSlice";
 import authReducer from "./slices/authSlice";
+import themeReducer from "./slices/themeSlice";
+import localeReducer from "./slices/localeSlice";
 import storage from "redux-persist/lib/storage"; // 기본은 localStorage
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -19,6 +21,8 @@ const rootReducer = combineReducers({
     user: userReducer,
     notice: noticeReducer,
     auth: authReducer,
+    theme: themeReducer,
+    locale: localeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

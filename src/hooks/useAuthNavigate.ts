@@ -1,7 +1,7 @@
 // src/hooks/useAuthNavigate.ts
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "./";
+import { useAppSelector, useAppDispatch, useLocale } from "./";
 import { useLazyGetUserQuery, showToast } from "../store";
 
 /**
@@ -15,6 +15,7 @@ export const useAuthNavigate = () => {
     const user = useAppSelector((state) => state.user.user);
     const [getUser] = useLazyGetUserQuery();
     const [isChecking, setIsChecking] = useState(false);
+    const { t } = useLocale();
 
     const navigateWithAuth = useCallback(
         async (path: string, options?: { onSuccess?: () => void }) => {
@@ -27,7 +28,7 @@ export const useAuthNavigate = () => {
 
             // 인증 체크 중
             setIsChecking(true);
-            dispatch(showToast({ message: "로그인 확인 중...", type: "info" }));
+            dispatch(showToast({ message: t.nav.checkingLogin, type: "info" }));
 
             try {
                 // getUser 호출 → 401 시 baseQueryWithReauth가 자동으로 refresh 시도
@@ -36,13 +37,13 @@ export const useAuthNavigate = () => {
                 options?.onSuccess?.();
             } catch {
                 // refresh도 실패하면 로그인 페이지로
-                dispatch(showToast({ message: "로그인이 필요합니다", type: "error" }));
+                // 토스트는 baseQueryWithReauth에서 이미 표시됨
                 navigate("/login");
             } finally {
                 setIsChecking(false);
             }
         },
-        [user, navigate, dispatch, getUser]
+        [user, navigate, dispatch, getUser, t]
     );
 
     return {

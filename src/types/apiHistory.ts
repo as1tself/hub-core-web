@@ -14,6 +14,8 @@ export interface ApiHistoryItem {
     roles: string;
     ipChain: string[];
     timestamp: string;
+    elapsedMs: number;
+    requestMethod: string;
 }
 
 export interface ApiHistoryPage {

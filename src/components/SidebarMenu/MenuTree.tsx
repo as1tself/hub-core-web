@@ -1,6 +1,7 @@
 import React from "react";
 import { Home, User, BarChart3, type LucideIcon } from "lucide-react";
 import MenuItem from "./MenuItem";
+import { useLocale } from "../../hooks";
 
 export interface MenuItemData {
     label: string;
@@ -10,13 +11,15 @@ export interface MenuItemData {
     requiresAuth?: boolean;
 }
 
-const menuData: MenuItemData[] = [
-    { label: "홈", path: "/", icon: Home },
-    { label: "내 정보", path: "/user", icon: User, requiresAuth: true },
-    { label: "API 내역", path: "/api/history", icon: BarChart3, requiresAuth: true },
-];
-
 const MenuTree: React.FC = () => {
+    const { t } = useLocale();
+
+    const menuData: MenuItemData[] = [
+        { label: t.nav.home, path: "/", icon: Home },
+        { label: t.nav.myInfo, path: "/user", icon: User, requiresAuth: true },
+        { label: t.nav.apiHistory, path: "/api/history", icon: BarChart3, requiresAuth: true },
+    ];
+
     return (
         <div className="menu-tree">
             {menuData.map((item, index) => (

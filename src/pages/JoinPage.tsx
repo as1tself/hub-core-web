@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCheckUsernameExistMutation, useRegisterUserMutation } from "../store";
+import { useLocale } from "../hooks";
 
 function JoinPage() {
     const navigate = useNavigate();
+    const { t } = useLocale();
 
     useEffect(() => {
-        document.title = '회원가입 - My App';
-    }, []);
+        document.title = `${t.auth.registerTitle} - My App`;
+    }, [t]);
 
     // 회원가입 변수
     const [username, setUsername] = useState<string>("");
@@ -52,9 +54,7 @@ function JoinPage() {
             nickname.trim() === "" ||
             email.trim() === ""
         ) {
-            setError(
-                "입력값을 다시 확인해주세요. (모든 항목은 필수이며, ID/비밀번호는 최소 4자)"
-            );
+            setError(t.auth.validationError);
             return;
         }
 
@@ -62,59 +62,59 @@ function JoinPage() {
             await registerUser({ username, password, nickname, email }).unwrap();
             navigate("/login");
         } catch {
-            setError("회원가입 중 오류가 발생했습니다.");
+            setError(t.auth.registerError);
         }
     };
 
     // 페이지
     return (
         <div>
-            <h1>회원 가입</h1>
+            <h1>{t.auth.registerTitle}</h1>
 
             <form onSubmit={handleSignUp}>
-                <label htmlFor="join-username">아이디</label>
+                <label htmlFor="join-username">{t.auth.username}</label>
                 <input
                     id="join-username"
                     type="text"
-                    placeholder="아이디 (4자 이상)"
+                    placeholder={t.auth.usernamePlaceholder}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
                     minLength={4}
                 />
                 {username.length >= 4 && isUsernameValid === false && (
-                    <p role="alert">이미 사용 중인 아이디입니다.</p>
+                    <p role="alert">{t.auth.usernameTaken}</p>
                 )}
                 {username.length >= 4 && isUsernameValid === true && (
-                    <p role="status">사용 가능한 아이디입니다.</p>
+                    <p role="status">{t.auth.usernameAvailable}</p>
                 )}
 
-                <label htmlFor="join-password">비밀번호</label>
+                <label htmlFor="join-password">{t.auth.password}</label>
                 <input
                     id="join-password"
                     type="password"
-                    placeholder="비밀번호 (4자 이상)"
+                    placeholder={t.auth.passwordPlaceholder}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={4}
                 />
 
-                <label htmlFor="join-nickname">닉네임</label>
+                <label htmlFor="join-nickname">{t.user.nickname}</label>
                 <input
                     id="join-nickname"
                     type="text"
-                    placeholder="닉네임"
+                    placeholder={t.auth.nicknamePlaceholder}
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
                 />
 
-                <label htmlFor="join-email">이메일</label>
+                <label htmlFor="join-email">{t.user.email}</label>
                 <input
                     id="join-email"
                     type="email"
-                    placeholder="이메일 주소"
+                    placeholder={t.auth.emailPlaceholder}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -123,7 +123,7 @@ function JoinPage() {
                 {error && <p role="alert">{error}</p>}
 
                 <button type="submit" disabled={isUsernameValid !== true || isRegistering}>
-                    {isRegistering ? "가입 중..." : "회원가입"}
+                    {isRegistering ? t.auth.registering : t.common.register}
                 </button>
             </form>
         </div>

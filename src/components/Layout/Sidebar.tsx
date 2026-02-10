@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { FileText, Megaphone } from "lucide-react";
 import MenuTree from "../SidebarMenu/MenuTree";
+import { useLocale } from "../../hooks";
 
 const Sidebar: React.FC = () => {
     const [isOpen] = useState(true);
+    const { t } = useLocale();
 
     return (
         <aside className={`sidebar ${isOpen ? "open" : "closed"}`}>
@@ -14,11 +16,11 @@ const Sidebar: React.FC = () => {
                 <div className="sidebar-footer-divider"></div>
                 <a className="menu-button footer-link" href="#changelog">
                     <FileText className="menu-icon" size={16} strokeWidth={2} />
-                    변경내역
+                    {t.sidebar.changelog}
                 </a>
                 <a className="menu-button footer-link" href="#notice">
                     <Megaphone className="menu-icon" size={16} strokeWidth={2} />
-                    공지사항
+                    {t.sidebar.notice}
                 </a>
             </div>
         </aside>

@@ -2,7 +2,8 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "../baseQueryWithReauth";
 import { setUser, clearUser } from "../slices/userSlice";
-import { setAccessToken, clearAccessToken } from "../slices/authSlice";
+import { setEncryptedAccessToken, clearAccessToken } from "../slices/authSlice";
+import { dpopClient } from "../../lib/dpop";
 import type { User, ApiResponse, LoginRequest, LoginResponse } from "../../types";
 
 // 회원가입 요청 타입
@@ -39,7 +40,9 @@ export const userApi = createApi({
             async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setAccessToken(data.accessToken));
+                    // 토큰을 DPoP 키로 암호화하여 저장
+                    const encryptedToken = await dpopClient.encryptToken(data.accessToken);
+                    dispatch(setEncryptedAccessToken(encryptedToken));
                 } catch {
                     // 로그인 실패 시 별도 처리 없음
                 }
@@ -71,7 +74,9 @@ export const userApi = createApi({
             async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(setAccessToken(data.accessToken));
+                    // 토큰을 DPoP 키로 암호화하여 저장
+                    const encryptedToken = await dpopClient.encryptToken(data.accessToken);
+                    dispatch(setEncryptedAccessToken(encryptedToken));
                 } catch {
                     // 토큰 교환 실패 시 별도 처리 없음
                 }

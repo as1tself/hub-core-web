@@ -2,16 +2,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useGetApiHistoryQuery } from "../store";
 import { TableSkeleton } from "../components/Loading";
-
-const sortOptions = [
-    { value: "timestamp,desc", label: "최신순" },
-    { value: "timestamp,asc", label: "오래된순" },
-];
+import { useLocale } from "../hooks";
 
 const ApiHistoryPage: React.FC = () => {
+    const { t } = useLocale();
+
+    const sortOptions = [
+        { value: "timestamp,desc", label: t.apiHistory.newest },
+        { value: "timestamp,asc", label: t.apiHistory.oldest },
+    ];
+
     useEffect(() => {
-        document.title = 'API 내역 - My App';
-    }, []);
+        document.title = `${t.apiHistory.title} - My App`;
+    }, [t]);
 
     const [page, setPage] = useState(0);
     const [sort, setSort] = useState("timestamp,desc");
@@ -62,18 +65,18 @@ const ApiHistoryPage: React.FC = () => {
         setSortOpen(false);
     };
 
-    const currentSortLabel = sortOptions.find(opt => opt.value === sort)?.label || "최신순";
+    const currentSortLabel = sortOptions.find(opt => opt.value === sort)?.label || t.apiHistory.newest;
     const totalPages = data ? Math.ceil(data.total / data.pageable.pageSize) : 1;
 
     return (
         <div className="api-history-page">
             <div className="api-history-header">
-                <h1>API 성공/오류 내역</h1>
+                <h1>{t.apiHistory.title}</h1>
             </div>
 
             <div className="api-history-filters">
                 <div className="filter-group">
-                    <label id="sort-label">정렬</label>
+                    <label id="sort-label">{t.apiHistory.sort}</label>
                     <div className="custom-dropdown" ref={dropdownRef}>
                         <button
                             type="button"
@@ -111,17 +114,17 @@ const ApiHistoryPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="filter-group filter-group-right">
-                    <label htmlFor="search-input">검색</label>
+                    <label htmlFor="search-input">{t.common.search}</label>
                     <input
                         id="search-input"
                         type="text"
-                        placeholder="검색어"
+                        placeholder={t.apiHistory.searchPlaceholder}
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={handleKeyDown}
                     />
                     <button type="button" className="search-btn" onClick={handleSearch}>
-                        검색
+                        {t.common.search}
                     </button>
                 </div>
             </div>
@@ -130,31 +133,41 @@ const ApiHistoryPage: React.FC = () => {
                 <table className="api-history-table">
                     <thead>
                     <tr>
-                        <th scope="col">Seq</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Path</th>
-                        <th scope="col">Client Ip</th>
-                        <th scope="col">Timestamp</th>
+                        <th scope="col">{t.apiHistory.seq}</th>
+                        <th scope="col">{t.apiHistory.status}</th>
+                        <th scope="col">{t.apiHistory.method}</th>
+                        <th scope="col">{t.apiHistory.path}</th>
+                        <th scope="col">{t.apiHistory.clientIp}</th>
+                        <th scope="col">{t.apiHistory.elapsed}</th>
+                        <th scope="col">{t.apiHistory.timestamp}</th>
                     </tr>
                     </thead>
                     <tbody>
                     {isLoading ? (
-                        <TableSkeleton rows={10} columns={5} />
+                        <TableSkeleton rows={10} columns={7} />
                     ) : data?.content && data.content.length > 0 ? (
                         data.content.map((item) => (
                             <tr key={item.seq}>
                                 <td>{item.seq}</td>
-                                <td className={item.status === 200 ? "status-ok" : "status-error"}>
-                                    {item.status}
+                                <td>
+                                    <span className={item.status >= 200 && item.status < 300 ? "status-ok" : "status-error"}>
+                                        {item.status}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span className="method-badge">{item.requestMethod}</span>
                                 </td>
                                 <td>{item.path}</td>
                                 <td>{item.clientIp}</td>
+                                <td>
+                                    <span className="elapsed-time">{item.elapsedMs}ms</span>
+                                </td>
                                 <td>{new Date(item.timestamp).toLocaleString()}</td>
                             </tr>
                         ))
                     ) : (
                         <tr>
-                            <td colSpan={5} className="no-data">데이터가 없습니다.</td>
+                            <td colSpan={7} className="no-data">{t.common.noData}</td>
                         </tr>
                     )}
                     </tbody>
@@ -162,14 +175,14 @@ const ApiHistoryPage: React.FC = () => {
             </div>
 
             {/* 페이지네이션 */}
-            <nav className="pagination" aria-label="페이지 네비게이션">
+            <nav className="pagination" aria-label="Page navigation">
                 <button
                     type="button"
                     onClick={() => setPage((p) => Math.max(p - 1, 0))}
                     disabled={page === 0}
-                    aria-label="이전 페이지"
+                    aria-label={t.common.prev}
                 >
-                    이전
+                    {t.common.prev}
                 </button>
                 <span aria-live="polite">
                     {page + 1} / {totalPages}
@@ -178,9 +191,9 @@ const ApiHistoryPage: React.FC = () => {
                     type="button"
                     onClick={() => setPage((p) => (p + 1 < totalPages ? p + 1 : p))}
                     disabled={page + 1 >= totalPages}
-                    aria-label="다음 페이지"
+                    aria-label={t.common.next}
                 >
-                    다음
+                    {t.common.next}
                 </button>
             </nav>
         </div>

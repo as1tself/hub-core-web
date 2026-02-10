@@ -1,0 +1,238 @@
+/* ===== Complete CSS Reset ===== */
+/* 모든 브라우저 기본 스타일 완전 제거 */
+
+/* 모든 요소 초기화 */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+/* HTML5 display-role reset */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/* Body */
+body {
+    line-height: 1;
+}
+
+/* List */
+ol,
+ul,
+menu {
+    list-style: none;
+}
+
+/* Quote */
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+    content: "";
+    content: none;
+}
+
+/* Table */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Form elements */
+input,
+button,
+textarea,
+select,
+optgroup {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    background: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+button {
+    cursor: pointer;
+    background: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+}
+
+textarea {
+    resize: none;
+    overflow: auto;
+}
+
+/* Anchor */
+a {
+    color: inherit;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+/* Image & Media */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+img {
+    border-style: none;
+}
+
+/* Fieldset & Legend */
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+legend {
+    padding: 0;
+    display: table;
+    max-width: 100%;
+    white-space: normal;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+b,
+strong {
+    font-weight: inherit;
+}
+
+i,
+em {
+    font-style: inherit;
+}
+
+small {
+    font-size: inherit;
+}
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+sup {
+    top: -0.5em;
+}
+
+/* Misc */
+hr {
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+    border: 0;
+    border-top: 1px solid;
+}
+
+abbr[title] {
+    text-decoration: none;
+}
+
+code,
+kbd,
+samp,
+pre {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* Hidden */
+[hidden] {
+    display: none !important;
+}
+
+/* Focus - 키보드 접근성 유지 */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-primary, #6366f1);
+    outline-offset: 2px;
+}
+
+/* Prevent text size adjust */
+html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Root stacking context */
+#root,
+#__next {
+    isolation: isolate;
+}

@@ -2,40 +2,38 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser, useLazyGetUserQuery, useLoginMutation } from "../store";
+import { useLocale, useAppSelector } from "../hooks";
 
 const BACKEND_API_BASE_URL = import.meta.env.VITE_BACKEND_API_BASE_URL;
 
 function LoginPage() {
+    const { t } = useLocale();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const dispatch = useDispatch();
+    const user = useAppSelector((state) => state.user.user);
 
     useEffect(() => {
-        document.title = '로그인 - My App';
-    }, []);
+        document.title = `${t.auth.loginTitle} - My App`;
+    }, [t]);
+
+    // 이미 로그인되어 있으면 리다이렉트 (Redux 상태로 확인, API 호출 없음)
+    useEffect(() => {
+        if (user) {
+            location.replace("/user");
+        }
+    }, [user]);
 
     const [triggerGetUser] = useLazyGetUserQuery();
     const [login] = useLoginMutation();
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // setError("") 제거 - 깜빡임 방지 (새 에러 발생 시 덮어씀)
 
-        // (1) precheck: 이미 로그인 되어 있는지 확인
-        // baseQueryWithReauth가 토큰 재발급을 자동으로 처리함
-        try {
-            await triggerGetUser().unwrap();
-            // 성공하면 이미 로그인됨 - setUser는 userApi의 onQueryStarted에서 자동 처리
-            location.replace("/user");
-            return;
-        } catch {
-            // 실패하면 로그인 플로우 진행
-        }
-
-        // (2) 로그인 진행
+        // 로그인 진행
         if (!username || !password) {
-            setError("아이디와 비밀번호를 입력하세요.");
+            setError(t.auth.enterCredentials);
             return;
         }
 
@@ -54,7 +52,7 @@ function LoginPage() {
 
             location.replace("/user");
         } catch {
-            setError("아이디 또는 비밀번호가 틀렸습니다.");
+            setError(t.auth.wrongCredentials);
         }
     };
 
@@ -65,14 +63,14 @@ function LoginPage() {
     return (
         <div className="login-page">
             <div className="login-card">
-                <h1 className="login-title">로그인</h1>
+                <h1 className="login-title">{t.auth.loginTitle}</h1>
                 <form onSubmit={handleLogin} className="login-form">
                     <div className="form-group">
-                        <label htmlFor="login-username">아이디</label>
+                        <label htmlFor="login-username">{t.auth.username}</label>
                         <input
                             id="login-username"
                             type="text"
-                            placeholder="아이디"
+                            placeholder={t.auth.username}
                             className="input"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
@@ -81,11 +79,11 @@ function LoginPage() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="login-password">비밀번호</label>
+                        <label htmlFor="login-password">{t.auth.password}</label>
                         <input
                             id="login-password"
                             type="password"
-                            placeholder="비밀번호"
+                            placeholder={t.auth.password}
                             className="input"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -95,17 +93,17 @@ function LoginPage() {
 
                     {error && <p className="login-error" role="alert">{error}</p>}
 
-                    <button type="submit" className="btn btn--primary">계속</button>
+                    <button type="submit" className="btn btn--primary">{t.common.continue}</button>
                 </form>
 
-                <div className="divider">또는</div>
+                <div className="divider">{t.common.or}</div>
 
                 <div className="social-row">
                     <button onClick={() => handleSocialLogin("google")} className="social-btn">
-                        Google로 계속하기
+                        {t.auth.continueWithGoogle}
                     </button>
                     <button onClick={() => handleSocialLogin("naver")} className="social-btn">
-                        Naver로 계속하기
+                        {t.auth.continueWithNaver}
                     </button>
                 </div>
             </div>
