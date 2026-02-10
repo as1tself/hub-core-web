@@ -2,18 +2,28 @@
 <html lang="ko" class="theme-loading">
   <head>
     <meta charset="UTF-8" />
-    <!--
-      CSP (Content Security Policy) - XSS 공격 방지
-      프로덕션 배포 시 Nginx/Apache에서 HTTP 헤더로 설정하는 것을 권장
-      (HTTP 헤더가 meta 태그보다 우선순위가 높고 더 많은 지시어 지원)
-    -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://localhost:8443 https://localhost:8080; img-src 'self' data: blob:; font-src 'self'; object-src 'none'; form-action 'self'; base-uri 'self';" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
-    <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+
+    <title>Hub Core</title>
+    <meta name="description" content="Hub Core - 통합 API 관리 및 모니터링 시스템" />
+    <meta name="author" content="Hub Core Team" />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a2e" />
+
+    <meta name="robots" content="noindex, nofollow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Hub Core" />
+    <meta property="og:description" content="통합 API 관리 및 모니터링 시스템" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="Hub Core" />
+
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://localhost:8443 https://localhost:8080; img-src 'self' data: blob:; font-src 'self'; object-src 'none'; form-action 'self'; base-uri 'self';" />
+
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   </head>
   <body>
     <div id="root"></div>
