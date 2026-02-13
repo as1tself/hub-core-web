@@ -30,15 +30,6 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 # 빌드 산출물 복사
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# 비root 실행을 위한 권한 설정
-RUN chown -R nginx:nginx /usr/share/nginx/html \
-    && chown -R nginx:nginx /var/cache/nginx \
-    && chown -R nginx:nginx /var/log/nginx \
-    && touch /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/run/nginx.pid
-
-USER nginx
-
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
