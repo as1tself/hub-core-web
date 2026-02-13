@@ -70,7 +70,7 @@ class DPoPClient {
                 this.publicKeyJwk = await originalCrypto.exportKey("jwk", this.keyPair.publicKey);
                 console.log("[DPoP] 기존 키 쌍 로드 완료");
             }
-        } catch (e) {
+        } catch {
             console.log("[DPoP] 기존 키 쌍 없음, 새로 생성");
         }
 

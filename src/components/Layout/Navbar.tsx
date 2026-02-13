@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch, useAuthNavigate, useLocale } from "../../hooks";
 import { useLogoutMutation, markAllAsRead, clearHistory } from "../../store";
@@ -72,9 +72,14 @@ const Navbar: React.FC = () => {
         }
     };
 
-    // 시간 포맷
-    const formatTime = (timestamp: number) => {
-        const diff = Date.now() - timestamp;
+    // 시간 포맷 (1분 단위로 갱신)
+    const [now, setNow] = useState(() => Date.now());
+    useEffect(() => {
+        const interval = setInterval(() => setNow(Date.now()), 60000);
+        return () => clearInterval(interval);
+    }, []);
+    const formatTime = useMemo(() => (timestamp: number) => {
+        const diff = now - timestamp;
         const minutes = Math.floor(diff / 60000);
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
@@ -83,7 +88,7 @@ const Navbar: React.FC = () => {
         if (minutes < 60) return t.time.minutesAgo(minutes);
         if (hours < 24) return t.time.hoursAgo(hours);
         return t.time.daysAgo(days);
-    };
+    }, [now, t]);
 
     const notificationIcons = {
         info: <Info size={18} color="#2196f3" />,

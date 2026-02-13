@@ -92,7 +92,7 @@ const baseQueryWithDPoP: BaseQueryFn<
     string | FetchArgs,
     unknown,
     FetchBaseQueryError
-> = async (args, api, _extraOptions) => {
+> = async (args, api) => {
     // args 정규화
     const { url: rawUrl, method = "GET", body, headers: argsHeaders } = typeof args === "string"
         ? { url: args, method: "GET", body: undefined, headers: undefined }
@@ -178,7 +178,7 @@ const baseQueryNoAuthWithDPoP: BaseQueryFn<
     string | FetchArgs,
     unknown,
     FetchBaseQueryError
-> = async (args, _api, _extraOptions) => {
+> = async (args) => {
     const { url: rawUrl, method = "GET", body, headers: argsHeaders } = typeof args === "string"
         ? { url: args, method: "GET", body: undefined, headers: undefined }
         : args;

@@ -40,6 +40,7 @@ export function DPoPProvider({ children }: DPoPProviderProps) {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDPoP(): DPoPContextType {
     const context = useContext(DPoPContext);
     if (!context) {

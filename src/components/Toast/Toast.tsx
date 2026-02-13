@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks";
 import { hideToast } from "../../store";
 import { X, Info, CheckCircle, XCircle } from "lucide-react";
@@ -22,6 +22,14 @@ interface ToastItemProps {
 const ToastItem: React.FC<ToastItemProps> = ({ toast, index, onRemove }) => {
     const [animationState, setAnimationState] = useState<"entering" | "visible" | "exiting">("entering");
 
+    const handleClose = useCallback(() => {
+        if (animationState === "exiting") return;
+        setAnimationState("exiting");
+        setTimeout(() => {
+            onRemove(toast.id);
+        }, ANIMATION_DURATION);
+    }, [animationState, onRemove, toast.id]);
+
     useEffect(() => {
         // 진입 애니메이션 완료 후 visible 상태로
         const enterTimer = setTimeout(() => {
@@ -37,15 +45,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, index, onRemove }) => {
             clearTimeout(enterTimer);
             clearTimeout(autoCloseTimer);
         };
-    }, []);
-
-    const handleClose = () => {
-        if (animationState === "exiting") return;
-        setAnimationState("exiting");
-        setTimeout(() => {
-            onRemove(toast.id);
-        }, ANIMATION_DURATION);
-    };
+    }, [handleClose]);
 
     const icons = {
         info: <Info size={20} strokeWidth={2} />,
