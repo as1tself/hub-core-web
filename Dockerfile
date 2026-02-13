@@ -25,6 +25,7 @@ RUN apk add --no-cache tzdata \
 
 # 기본 nginx 설정 제거 후 커스텀 설정 복사
 RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/security-headers.conf /etc/nginx/conf.d/security-headers.conf
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # 빌드 산출물 복사
