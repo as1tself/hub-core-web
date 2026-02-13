@@ -32,6 +32,15 @@ const resolveTheme = (mode: ThemeMode): "light" | "dark" => {
     return mode;
 };
 
+const applyThemeSmooth = (theme: "light" | "dark") => {
+    const doc = document.documentElement;
+    doc.classList.add("theme-transitioning");
+    doc.setAttribute("data-theme", theme);
+    setTimeout(() => {
+        doc.classList.remove("theme-transitioning");
+    }, 200);
+};
+
 const initialMode = getSavedTheme();
 
 const initialState: ThemeState = {
@@ -47,19 +56,19 @@ const themeSlice = createSlice({
             state.mode = action.payload;
             state.resolvedTheme = resolveTheme(action.payload);
             localStorage.setItem("theme", action.payload);
-            document.documentElement.setAttribute("data-theme", state.resolvedTheme);
+            applyThemeSmooth(state.resolvedTheme);
         },
         toggleTheme: (state) => {
             const newTheme = state.resolvedTheme === "light" ? "dark" : "light";
             state.mode = newTheme;
             state.resolvedTheme = newTheme;
             localStorage.setItem("theme", newTheme);
-            document.documentElement.setAttribute("data-theme", newTheme);
+            applyThemeSmooth(newTheme);
         },
         syncWithSystem: (state) => {
             if (state.mode === "system") {
                 state.resolvedTheme = getSystemTheme();
-                document.documentElement.setAttribute("data-theme", state.resolvedTheme);
+                applyThemeSmooth(state.resolvedTheme);
             }
         },
         initializeTheme: (state) => {

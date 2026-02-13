@@ -9,18 +9,12 @@
 /* Cover */
 .profile-card__cover {
     height: 120px;
-    background: linear-gradient(135deg, var(--color-primary) 0%, #a855f7 100%);
+    background: linear-gradient(135deg, var(--color-bg-tertiary) 0%, var(--color-bg-secondary) 100%);
     position: relative;
 }
 
 .profile-card__cover-gradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(0, 0, 0, 0.1) 100%
-    );
+    display: none;
 }
 
 /* Avatar */

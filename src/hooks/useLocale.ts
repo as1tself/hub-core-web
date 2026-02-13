@@ -1,6 +1,7 @@
 // src/hooks/useLocale.ts
 import { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "./index";
+import { useAppDispatch } from "./useAppDispatch";
+import { useAppSelector } from "./useAppSelector";
 import { toggleLocale, setLocale, initializeLocale } from "../store/slices/localeSlice";
 import type { LocaleMode } from "../store/slices/localeSlice";
 import { translations } from "../i18n/translations";

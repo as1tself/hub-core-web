@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch, useAuthNavigate, useLocale } from "../../hooks";
 import { useLogoutMutation, markAllAsRead, clearHistory } from "../../store";
-import { Bell, BellRing, Info, CheckCircle, XCircle } from "lucide-react";
+import { Bell, BellRing, Info, CheckCircle, XCircle, User } from "lucide-react";
 import { ThemeToggle } from "../ThemeToggle";
 import { LocaleToggle } from "../LocaleToggle";
 
@@ -12,6 +12,7 @@ const Navbar: React.FC = () => {
     const { t } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
+    const [imgError, setImgError] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -179,17 +180,35 @@ const Navbar: React.FC = () => {
                         aria-haspopup="menu"
                         onClick={() => setMenuOpen(!menuOpen)}
                     >
-                        <img
-                            src="/profile.jpg"
-                            alt="사용자 프로필"
-                            className="navbar-profile"
-                        />
+                        {imgError ? (
+                            <span className="navbar-profile navbar-profile-fallback">
+                                <User size={18} strokeWidth={1.5} />
+                            </span>
+                        ) : (
+                            <img
+                                src="/profile.jpg"
+                                alt="사용자 프로필"
+                                className="navbar-profile"
+                                onError={() => setImgError(true)}
+                            />
+                        )}
                     </button>
 
                     {menuOpen && (
                         <div className="profile-menu" role="menu" aria-label="프로필 메뉴">
                             <div className="profile-header">
-                                <img src="/profile.jpg" alt="사용자 프로필" className="profile-avatar" />
+                                {imgError ? (
+                                    <span className="profile-avatar profile-avatar-fallback">
+                                        <User size={20} strokeWidth={1.5} />
+                                    </span>
+                                ) : (
+                                    <img
+                                        src="/profile.jpg"
+                                        alt="사용자 프로필"
+                                        className="profile-avatar"
+                                        onError={() => setImgError(true)}
+                                    />
+                                )}
                                 <div className="profile-info">
                                     <div className="profile-name">
                                         {userInfo ? userInfo.username : t.nav.loginRequired}
@@ -213,7 +232,6 @@ const Navbar: React.FC = () => {
                                 className="profile-item"
                                 role="menuitem"
                                 disabled
-                                style={{ color: "lightgray" }}
                             >
                                 {t.nav.openApiIssue}
                             </button>
@@ -254,7 +272,6 @@ const Navbar: React.FC = () => {
                                 className="profile-item"
                                 role="menuitem"
                                 disabled
-                                style={{ color: "lightgray" }}
                             >
                                 {t.common.settings}
                             </button>

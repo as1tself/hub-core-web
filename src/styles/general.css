@@ -16,12 +16,20 @@ body,
     transition: var(--theme-transition);
 }
 
-/* 테마 로딩 중 transition 비활성화 (깜빡임 방지) */
+/* 테마 로딩 중 transition 비활성화 (초기 깜빡임 방지) */
 html.theme-loading,
 html.theme-loading *,
 html.theme-loading *::before,
 html.theme-loading *::after {
     transition: none !important;
+}
+
+/* 테마 전환 시 모든 요소에 동일한 트랜지션 강제 (파도타기 방지) */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
 }
 
 /* 텍스트 색상 상속 */
@@ -66,5 +74,5 @@ th {
 /* Selection */
 ::selection {
     background: var(--color-primary-bg);
-    color: var(--color-primary);
+    color: var(--color-text);
 }

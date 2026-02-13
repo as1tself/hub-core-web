@@ -43,7 +43,7 @@
 }
 
 .theme-toggle__icon--moon {
-    color: var(--color-primary-light);
+    color: var(--color-text-muted);
     opacity: 0.4;
 }
 
@@ -53,7 +53,7 @@
 
 [data-theme="dark"] .theme-toggle__icon--moon {
     opacity: 1;
-    color: var(--color-primary);
+    color: var(--color-text);
 }
 
 .theme-toggle__thumb {

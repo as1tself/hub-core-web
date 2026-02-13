@@ -3,13 +3,13 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
     padding: 20px 24px;
-    transition: var(--theme-transition), transform 0.2s ease, box-shadow 0.2s ease;
+    transition: var(--theme-transition), transform 0.2s ease;
     min-width: 200px;
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
 }
 
 .stat-card__header {

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "./index";
+import { useAppDispatch } from "./useAppDispatch";
+import { useAppSelector } from "./useAppSelector";
 import { toggleTheme, syncWithSystem, setTheme, initializeTheme } from "../store/slices/themeSlice";
 import type { ThemeMode } from "../store/slices/themeSlice";
 

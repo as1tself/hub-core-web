@@ -70,7 +70,7 @@
     align-items: center;
     gap: 6px;
     font-size: var(--font-base);
-    color: var(--color-primary);
+    color: var(--color-text-secondary);
     font-weight: 500;
     transition: all var(--transition-fast);
 }
@@ -100,9 +100,9 @@
     background: var(--color-bg-secondary);
     font-weight: 600;
     color: var(--color-text-muted);
-    font-size: var(--font-xs);
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
 }
 
 .recent-calls-table tbody tr {
