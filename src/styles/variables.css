@@ -10,6 +10,7 @@
 [data-theme="light"] {
     /* Primary Colors */
     --color-primary: #18181b;
+    --color-primary-foreground: #ffffff;
     --color-primary-hover: #27272a;
     --color-primary-light: #a1a1aa;
     --color-primary-bg: #f4f4f5;
@@ -91,6 +92,7 @@
 [data-theme="dark"] {
     /* Primary Colors */
     --color-primary: #fafafa;
+    --color-primary-foreground: #09090b;
     --color-primary-hover: #e4e4e7;
     --color-primary-light: #52525b;
     --color-primary-bg: rgba(255, 255, 255, 0.08);
