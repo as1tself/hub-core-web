@@ -1,0 +1,7 @@
+# Security Policy for dev-personal.com
+# RFC 9116 - https://www.rfc-editor.org/rfc/rfc9116
+
+Contact: mailto:security@dev-personal.com
+Expires: 2027-02-14T00:00:00.000Z
+Preferred-Languages: ko, en
+Canonical: https://dev-personal.com/.well-known/security.txt
