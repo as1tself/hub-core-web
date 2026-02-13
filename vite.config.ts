@@ -38,7 +38,7 @@ const CSP_DIRECTIVES = {
         "default-src": ["'self'"],
         "script-src": ["'self'"], // 인라인 스크립트 완전 차단
         "style-src": ["'self'", "'unsafe-inline'"], // CSS-in-JS 지원
-        "connect-src": ["'self'", "https://api.oxec82b6.dev"], // 프로덕션 API
+        "connect-src": ["'self'", "https://api.dev-personal.com"], // 프로덕션 API
         "img-src": ["'self'", "data:", "blob:"],
         "font-src": ["'self'"],
         "object-src": ["'none'"],
@@ -97,10 +97,12 @@ function cspPlugin(): Plugin {
 export default defineConfig({
     plugins: [react(), cspPlugin()],
     server: {
-        https: {
-            key: fs.readFileSync(path.resolve(__dirname, "ssl/key.pem")),
-            cert: fs.readFileSync(path.resolve(__dirname, "ssl/cert.pem")),
-        },
+        ...(fs.existsSync(path.resolve(__dirname, "ssl/key.pem")) && {
+            https: {
+                key: fs.readFileSync(path.resolve(__dirname, "ssl/key.pem")),
+                cert: fs.readFileSync(path.resolve(__dirname, "ssl/cert.pem")),
+            },
+        }),
         port: 5173,
     },
     // 프로덕션 빌드 시 index.html에 CSP meta 태그 주입

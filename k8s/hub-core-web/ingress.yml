@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hub-core-web-ingress
+  namespace: hub-system
+  labels:
+    app: hub-core-web
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - dev-personal.com
+        - www.dev-personal.com
+      secretName: hub-core-web-tls
+  rules:
+    - host: dev-personal.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hub-core-web
+                port:
+                  number: 80
+    - host: www.dev-personal.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hub-core-web
+                port:
+                  number: 80

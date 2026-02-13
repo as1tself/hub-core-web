@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hub-core-web
+  namespace: hub-system
+  labels:
+    app: hub-core-web
+spec:
+  type: ClusterIP
+  selector:
+    app: hub-core-web
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

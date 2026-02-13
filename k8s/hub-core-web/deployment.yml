@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hub-core-web
+  namespace: hub-system
+  labels:
+    app: hub-core-web
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: hub-core-web
+  template:
+    metadata:
+      labels:
+        app: hub-core-web
+    spec:
+      imagePullSecrets:
+        - name: ghcr-login-secret
+      containers:
+        - name: hub-core-web
+          image: ghcr.io/as1tself/hub-core-web:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            periodSeconds: 30
+            failureThreshold: 3
+      terminationGracePeriodSeconds: 10
