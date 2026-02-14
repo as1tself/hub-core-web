@@ -4,7 +4,7 @@ export interface ApiHistoryItem {
     seq: number;
     status: number;
     requestId: string;
-    accessToken: string;
+    tokenJti: string;
     code: string;
     message: string;
     path: string;
