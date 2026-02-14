@@ -106,6 +106,9 @@ export default defineConfig({
         port: 5173,
     },
     // 프로덕션 빌드 시 index.html에 CSP meta 태그 주입
+    esbuild: {
+        drop: ["console", "debugger"],
+    },
     build: {
         rollupOptions: {
             output: {
