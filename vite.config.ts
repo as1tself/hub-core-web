@@ -37,7 +37,7 @@ const CSP_DIRECTIVES = {
     production: {
         "default-src": ["'self'"],
         "script-src": ["'self'"], // 인라인 스크립트 완전 차단
-        "style-src": ["'self'", "'unsafe-inline'"], // CSS-in-JS 지원
+        "style-src": ["'self'"],
         "connect-src": ["'self'", "https://api.dev-personal.com"], // 프로덕션 API
         "img-src": ["'self'", "data:", "blob:"],
         "font-src": ["'self'"],
@@ -81,7 +81,7 @@ function cspPlugin(): Plugin {
                 // 추가 보안 헤더
                 res.setHeader("X-Content-Type-Options", "nosniff");
                 res.setHeader("X-Frame-Options", "DENY");
-                res.setHeader("X-XSS-Protection", "1; mode=block");
+                res.setHeader("X-XSS-Protection", "0");
                 res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
                 res.setHeader(
                     "Permissions-Policy",

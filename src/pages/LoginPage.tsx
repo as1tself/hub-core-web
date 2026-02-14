@@ -56,7 +56,10 @@ function LoginPage() {
         }
     };
 
+    const ALLOWED_PROVIDERS = ["google", "naver"] as const;
+
     const handleSocialLogin = (provider: string) => {
+        if (!(ALLOWED_PROVIDERS as readonly string[]).includes(provider)) return;
         window.location.href = `${BACKEND_API_BASE_URL}/oauth2/authorization/${provider}`;
     };
 
@@ -74,6 +77,7 @@ function LoginPage() {
                             className="input"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            autoComplete="username"
                             required
                         />
                     </div>
@@ -87,6 +91,7 @@ function LoginPage() {
                             className="input"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            autoComplete="current-password"
                             required
                         />
                     </div>
