@@ -35,6 +35,7 @@ class DPoPClient {
     private publicKeyJwk: JsonWebKey | null = null;
     private initialized = false;
     private initPromise: Promise<DPoPClient> | null = null;
+    private indexedDBAvailable = true;
     #encryptionKey: CryptoKey | null = null;
 
     private constructor() {}
@@ -71,7 +72,8 @@ class DPoPClient {
                 console.log("[DPoP] 기존 키 쌍 로드 완료");
             }
         } catch {
-            console.log("[DPoP] 기존 키 쌍 없음, 새로 생성");
+            this.indexedDBAvailable = false;
+            console.log("[DPoP] IndexedDB 사용 불가, 세션 내 키만 유지됩니다");
         }
 
         if (!this.keyPair) {
@@ -158,6 +160,8 @@ class DPoPClient {
         this.publicKeyJwk = null;
         this.#encryptionKey = null;
         this.initialized = false;
+
+        if (!this.indexedDBAvailable) return;
 
         return new Promise((resolve, reject) => {
             const request = indexedDB.deleteDatabase(DB_NAME);
@@ -311,6 +315,7 @@ class DPoPClient {
     }
 
     private async saveKeyPairToDB(keyPair: DPoPKeyPair): Promise<void> {
+        if (!this.indexedDBAvailable) return;
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(DB_NAME, 1);
             request.onerror = () => reject(request.error);

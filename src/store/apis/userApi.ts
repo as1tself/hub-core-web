@@ -96,6 +96,7 @@ export const userApi = createApi({
                     dispatch(clearAccessToken());
                     dispatch(clearUser());
                     dispatch(userApi.util.resetApiState());
+                    await dpopClient.clearKeyPair();
                 }
             },
         }),

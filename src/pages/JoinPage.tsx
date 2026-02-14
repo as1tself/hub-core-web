@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useCheckUsernameExistMutation, useRegisterUserMutation } from "../store";
 import { useLocale } from "../hooks";
 
+const USERNAME_PATTERN = /^[a-zA-Z0-9_-]{4,20}$/;
+const NICKNAME_MAX_LENGTH = 30;
+
 function JoinPage() {
     const navigate = useNavigate();
     const { t } = useLocale();
@@ -49,9 +52,10 @@ function JoinPage() {
         setError("");
 
         if (
-            username.length < 4 ||
+            !USERNAME_PATTERN.test(username) ||
             password.length < 4 ||
             nickname.trim() === "" ||
+            nickname.trim().length > NICKNAME_MAX_LENGTH ||
             email.trim() === ""
         ) {
             setError(t.auth.validationError);
@@ -79,8 +83,11 @@ function JoinPage() {
                     placeholder={t.auth.usernamePlaceholder}
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    autoComplete="username"
                     required
                     minLength={4}
+                    maxLength={20}
+                    pattern="[a-zA-Z0-9_-]{4,20}"
                 />
                 {username.length >= 4 && isUsernameValid === false && (
                     <p role="alert">{t.auth.usernameTaken}</p>
@@ -96,6 +103,7 @@ function JoinPage() {
                     placeholder={t.auth.passwordPlaceholder}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="new-password"
                     required
                     minLength={4}
                 />
@@ -108,6 +116,7 @@ function JoinPage() {
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
+                    maxLength={30}
                 />
 
                 <label htmlFor="join-email">{t.user.email}</label>
@@ -117,6 +126,7 @@ function JoinPage() {
                     placeholder={t.auth.emailPlaceholder}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
                     required
                 />
 
