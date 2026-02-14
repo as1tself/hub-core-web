@@ -15,9 +15,10 @@ COPY . .
 RUN npm run build
 
 # ── Runtime stage ────────────────────────────────────────────
-FROM nginx:alpine
+FROM nginxinc/nginx-unprivileged:alpine
 
-# 타임존 설정
+# 타임존 설정 (root로 실행 후 nginx 유저로 전환)
+USER root
 RUN apk add --no-cache tzdata \
     && cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
     && echo "Asia/Seoul" > /etc/timezone \
@@ -28,9 +29,16 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/security-headers.conf /etc/nginx/conf.d/security-headers.conf
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 
+# CSP 리포트 로그 파일 생성 (nginx 유저 쓰기 권한)
+RUN touch /var/log/nginx/csp-reports.log \
+    && chown nginx:nginx /var/log/nginx/csp-reports.log
+
 # 빌드 산출물 복사
 COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+# non-root 유저로 전환
+USER nginx
+
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
