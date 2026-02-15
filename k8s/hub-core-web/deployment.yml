@@ -20,13 +20,23 @@ spec:
       labels:
         app: hub-core-web
     spec:
+      serviceAccountName: hub-core-web
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+        runAsNonRoot: true
       imagePullSecrets:
         - name: ghcr-login-secret
       containers:
         - name: hub-core-web
           image: ghcr.io/as1tself/hub-core-web:latest
           ports:
-            - containerPort: 80
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           resources:
             requests:
               memory: "64Mi"
@@ -37,20 +47,20 @@ spec:
           startupProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
             initialDelaySeconds: 5
             periodSeconds: 3
             failureThreshold: 10
           readinessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
             periodSeconds: 10
             failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /health
-              port: 80
+              port: 8080
             periodSeconds: 30
             failureThreshold: 3
       terminationGracePeriodSeconds: 10

@@ -377,7 +377,7 @@ export const baseQueryWithReauth: typeof baseQueryWithDPoP = async (args, api, e
     // 실제 요청 실행
     let result = await baseQueryWithDPoP(args, api, extraOptions);
 
-    // 401 에러 처리
+    // 에러 처리
     if (result.error) {
         const status = Number(result.error.status);
 
@@ -391,6 +391,13 @@ export const baseQueryWithReauth: typeof baseQueryWithDPoP = async (args, api, e
             }
         } catch { /* no-op */ }
 
+        // 429 Rate Limit 처리 (전역)
+        if (status === 429) {
+            const locale = (api.getState() as RootState).locale.resolvedLocale;
+            api.dispatch(showToast({ message: translations[locale].auth.rateLimitExceeded, type: "error" }));
+        }
+
+        // 401 에러 처리
         const shouldRefresh = status === 401 || errorCode === "client.request.jwt.expired";
 
         if (shouldRefresh) {

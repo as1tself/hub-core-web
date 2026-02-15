@@ -105,6 +105,8 @@ export interface TranslationKeys {
         password: string;
         enterCredentials: string;
         wrongCredentials: string;
+        accountLocked: string;
+        rateLimitExceeded: string;
         continueWithGoogle: string;
         continueWithNaver: string;
         registerTitle: string;
@@ -112,10 +114,12 @@ export interface TranslationKeys {
         emailPlaceholder: string;
         usernamePlaceholder: string;
         passwordPlaceholder: string;
+        passwordHint: string;
         checkDuplicate: string;
         checking: string;
         usernameTaken: string;
         usernameAvailable: string;
+        emailConflict: string;
         registering: string;
         validationError: string;
         registerError: string;

@@ -53,7 +53,7 @@ function JoinPage() {
 
         if (
             !USERNAME_PATTERN.test(username) ||
-            password.length < 4 ||
+            password.length < 8 ||
             nickname.trim() === "" ||
             nickname.trim().length > NICKNAME_MAX_LENGTH ||
             email.trim() === ""
@@ -65,8 +65,19 @@ function JoinPage() {
         try {
             await registerUser({ username, password, nickname, email }).unwrap();
             navigate("/login");
-        } catch {
-            setError(t.auth.registerError);
+        } catch (err: unknown) {
+            const errorData = (err as { data?: { code?: string } })?.data;
+            const code = errorData?.code;
+
+            if (code === "client.request.validate.conflict") {
+                setError(t.auth.usernameTaken);
+            } else if (code === "client.request.validate.email_conflict") {
+                setError(t.auth.emailConflict);
+            } else if (code === "client.request.rate_limit.exceeded") {
+                setError(t.auth.rateLimitExceeded);
+            } else {
+                setError(t.auth.registerError);
+            }
         }
     };
 
@@ -105,8 +116,10 @@ function JoinPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                     required
-                    minLength={4}
+                    minLength={8}
+                    maxLength={32}
                 />
+                <p className="form-hint">{t.auth.passwordHint}</p>
 
                 <label htmlFor="join-nickname">{t.user.nickname}</label>
                 <input

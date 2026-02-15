@@ -51,8 +51,17 @@ function LoginPage() {
             }
 
             location.replace("/user");
-        } catch {
-            setError(t.auth.wrongCredentials);
+        } catch (err: unknown) {
+            const errorData = (err as { data?: { code?: string } })?.data;
+            const code = errorData?.code;
+
+            if (code === "auth.account.locked") {
+                setError(t.auth.accountLocked);
+            } else if (code === "client.request.rate_limit.exceeded") {
+                setError(t.auth.rateLimitExceeded);
+            } else {
+                setError(t.auth.wrongCredentials);
+            }
         }
     };
 
